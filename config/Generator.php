@@ -10,7 +10,7 @@ echo "
 #######  |\####### |## |## |## |      \####### |
 \_______/  \_______|\__|\__|\__|       \_______|
 
-Dalira version 1.0.0
+Dalira version 1.1.1
 Developed By: Adrian Pol Peligrino\n
 ";
 
@@ -42,8 +42,8 @@ DB_PASSWORD=
 DB_DATABASE=
 
 APP_NAME=Dalira
-APP_DESCRIPTION=A lightweight PHP template for faster and easier web development.
-APP_KEYWORDS=PHP, PHP Template, Dalira, Web Development
+APP_DESCRIPTION=A lightweight PHP framework for faster and easier web development.
+APP_KEYWORDS=PHP, PHP Framework, Dalira, Web Development
 APP_AUTHOR=Adrian Pol Peligrino
 APP_ICON=/img/favicon.png
 

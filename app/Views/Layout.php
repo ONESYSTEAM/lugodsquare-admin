@@ -1,5 +1,3 @@
-<?php $flashMessages = getFlashMessages(); ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,10 +10,24 @@
 
     <link rel="shortcut icon" href="<?= htmlspecialchars($_ENV['APP_ICON'] ?? '') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= assets('css/Flash.css') ?>">
+    <link rel="stylesheet" href="<?= assets('css/style.css') ?>">
 
-    <title><?= isset($title) && !empty($title) ? $this->e($title) : ($_ENV['APP_NAME'] ?? '') ?></title>
+    <title><?= isset($title) && !empty($title) ? $this->e($title) : htmlspecialchars($_ENV['APP_NAME'] ?? '') ?></title>
 </head>
+
+<style>
+.powered-by {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 0.875rem;
+    color: #6c757d; /* Bootstrap's text-secondary */
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0.6); /* optional: subtle background */
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+</style>
 
 <body>
 
@@ -23,11 +35,12 @@
         <?= $this->section('mainContent') ?>
     </main>
 
-    <?= $this->insert('Partials/Flash', ['flashMessages' => $flashMessages]) ?>
+    <div class="powered-by">
+        Powered by: <a href="https://onesysteam.com/" class="text-decoration-none text-danger" target="_blank">OneSysteam</a>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="<?= assets('js/Flash.js') ?>"></script>
+    <script src="<?= assets("js/Toasts.js") ?>"></script>
 
 </body>
 
