@@ -21,4 +21,11 @@ class UsersModel
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getUsers()
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users_tbl");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

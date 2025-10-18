@@ -10,9 +10,8 @@ $this->insert('Errors/Toasts');
             <div class="row flex-grow">
                 <div class="col-lg-4 mx-auto">
                     <div class="auth-form-light text-left p-5">
-                        <div class="brand-logo d-flex align-items-between justify-content-between">
-                            <img src="../../assets/images/logo.svg">
-                            <h5>Admin</h5>
+                        <div class="brand-logo text-center">
+                            <img src="<?= htmlspecialchars($_ENV['APP_LOGO'] ?? '') ?>">
                         </div>
                         <h4>Hello! let's get started</h4>
                         <h6 class="font-weight-light">Login to continue.</h6>

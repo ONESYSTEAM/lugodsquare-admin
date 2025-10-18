@@ -14,6 +14,8 @@ class Router
         Router::add('/', fn() => (new UsersController())->index());
         Router::add('/login', fn() => (new UsersController())->login($_POST['username'] ?? 0, $_POST['password'] ?? 0), 'POST');
         Router::add('/logout', fn() => (new UsersController())->logout());
+        Router::add('/users', fn() => (new UsersController())->getUsers(), 'POST');
+        Router::add('/addUser', fn() => Router::render('AddUser'));
 
         Router::run();
     }

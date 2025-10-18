@@ -84,4 +84,12 @@ class UsersController
         header("Location: /login");
         exit;
     }
+
+    public function getUsers()
+    {
+        $users = $this->UsersModel->getUsers();
+        return $GLOBALS['templates']->render('Users', [
+            'users' => $users
+        ]);
+    }
 }
