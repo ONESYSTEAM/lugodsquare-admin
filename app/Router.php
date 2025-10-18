@@ -12,6 +12,8 @@ class Router
     {
         // Define application routes here
         Router::add('/', fn() => (new UsersController())->index());
+        Router::add('/login', fn() => (new UsersController())->login($_POST['username'] ?? 0, $_POST['password'] ?? 0), 'POST');
+        Router::add('/logout', fn() => (new UsersController())->logout());
 
         Router::run();
     }

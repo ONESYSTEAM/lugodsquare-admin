@@ -1,5 +1,5 @@
 <?php
-$this->layout('Layout', ['mainContent' => $this->fetch('Layout')]);
+$this->layout('Layout/Layout', ['mainContent' => $this->fetch('Layout/Layout')]);
 $this->start('mainContent');
 $this->insert('Errors/Toasts');
 ?>
@@ -16,12 +16,12 @@ $this->insert('Errors/Toasts');
                         </div>
                         <h4>Hello! let's get started</h4>
                         <h6 class="font-weight-light">Login to continue.</h6>
-                        <form action="#" method="post" class="pt-3">
+                        <form action="/login" method="post" class="pt-3">
                             <div class="form-group mb-2">
-                                <input type="text" class="form-control form-control-lg" placeholder="Username">
+                                <input type="text" class="form-control form-control-lg" name="username" placeholder="Username">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control form-control-lg" placeholder="Password">
+                                <input type="password" class="form-control form-control-lg" name="password" placeholder="Password">
                             </div>
                             <div class="mt-3 d-grid gap-2">
                                 <button type="submit" class="btn btn-block btn-gradient-danger btn-lg font-weight-medium auth-form-btn text-uppercase">Login</button>
@@ -31,9 +31,11 @@ $this->insert('Errors/Toasts');
                 </div>
             </div>
         </div>
-        <!-- content-wrapper ends -->
     </div>
-    <!-- page-body-wrapper ends -->
+</div>
+
+<div class="powered-by">
+    Powered by: <a href="https://onesysteam.com/" class="text-decoration-none text-danger" target="_blank">OneSysteam</a>
 </div>
 
 <?php

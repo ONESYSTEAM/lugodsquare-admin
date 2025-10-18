@@ -13,6 +13,12 @@ class UsersModel
     {
         $this->db = $db->getConnection();
     }
-    
-    // Add your custom methods below to interact with the database.
+
+    public function getUserByUsername($username)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users_tbl WHERE username = :username LIMIT 1");
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
