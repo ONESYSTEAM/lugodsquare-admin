@@ -88,8 +88,98 @@ class UsersController
     public function getUsers()
     {
         $users = $this->UsersModel->getUsers();
-        return $GLOBALS['templates']->render('Users', [
+        echo $GLOBALS['templates']->render('Users', [
             'users' => $users
         ]);
+    }
+
+    public function addUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $firstName = $_POST['firstName'] ?? ' ';
+            $lastName = $_POST['lastName'] ?? ' ';
+            $password = trim($_POST['password'] ?? ' ');
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $userType = $_POST['userType'] ?? ' ';
+            $username = $_POST['username'] ?? ' ';
+
+            $addUser = $this->UsersModel->addUser($firstName, $lastName, $username, $userType, $hashedPassword);
+            if ($addUser) {
+                $_SESSION['success'][] = 'User Added Successfully!';
+                header("Location: /addUser");
+                exit;
+            } else {
+                $_SESSION['danger'][] = 'Add user failed.';
+                header("Location: /addUser");
+                exit;
+            }
+        }
+    }
+
+    public function getUser($id)
+    {
+        // $userId = $id['id'] ?? 0;
+        $user = $this->UsersModel->getUserById($id);
+
+        if (!$user) {
+            $_SESSION['danger'][] = 'User not found.';
+            header("Location: /users");
+            exit;
+        }
+
+        echo $GLOBALS['templates']->render('UpdateUser', [
+            'user' => $user
+        ]);
+    }
+
+    public function updateUser($userId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // $userId = $_POST['userId'] ?? 0;
+            $firstName = $_POST['firstName'] ?? ' ';
+            $lastName = $_POST['lastName'] ?? ' ';
+            $password = trim($_POST['password'] ?? ' ');
+            $userType = $_POST['userType'] ?? ' ';
+            $username = $_POST['username'] ?? ' ';
+
+            $user = $this->UsersModel->getUserById($userId);
+            if (empty($password)) {
+                $hashedPassword = $user['password'];
+            } else {
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            }
+
+            $updateUser = $this->UsersModel->updateUser($userId, $firstName, $lastName, $username, $userType, $hashedPassword);
+            if ($updateUser) {
+                $_SESSION['success'][] = 'User Updated Successfully!';
+            } else {
+                $_SESSION['danger'][] = 'Update user failed.';
+            }
+            header("Location: /users");
+            exit;
+        }
+    }
+
+    public function viewUser($id)
+    {
+        $user = $this->UsersModel->getUserById($id);
+        echo $GLOBALS['templates']->render('ViewUser', [
+            'user' => $user
+        ]);
+    }
+
+    public function deleteUser($userId)
+    {
+        $adminId = $_SESSION['user_id'] ?? 0;
+
+        $deleteUser = $this->UsersModel->deleteUser($userId, $adminId);
+        if ($deleteUser) {
+            $_SESSION['success'][] = 'User deleted successfully.';
+        } else {
+            $_SESSION['danger'][] = 'Failed to delete user.';
+        }
+
+        header("Location: /users");
+        exit;
     }
 }

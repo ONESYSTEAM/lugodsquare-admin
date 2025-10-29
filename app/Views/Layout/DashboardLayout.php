@@ -1,3 +1,9 @@
+<?php
+if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
+    header('Location: /');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -164,13 +170,13 @@
                         <div class="collapse" id="booking">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Courts</a>
+                                    <a class="nav-link" href="/courts">Courts</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Members</a>
+                                    <a class="nav-link" href="/members">Members</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Schedules</a>
+                                    <a class="nav-link" href="/schedules">Schedules</a>
                                 </li>
                             </ul>
                         </div>

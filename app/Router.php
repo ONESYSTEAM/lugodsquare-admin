@@ -2,6 +2,7 @@
 
 namespace app;
 
+use app\Controllers\BookingController;
 use app\Controllers\UsersController;
 
 class Router
@@ -14,8 +15,31 @@ class Router
         Router::add('/', fn() => (new UsersController())->index());
         Router::add('/login', fn() => (new UsersController())->login($_POST['username'] ?? 0, $_POST['password'] ?? 0), 'POST');
         Router::add('/logout', fn() => (new UsersController())->logout());
+
         Router::add('/users', fn() => (new UsersController())->getUsers(), 'POST');
         Router::add('/addUser', fn() => Router::render('AddUser'));
+        Router::add('/addUser/add', fn() => (new UsersController())->addUser(), 'POST');
+        Router::add('/viewUser/{userId}', fn($data) => (new UsersController())->viewUser($data['userId'] ?? 0));
+        Router::add('/updateUser/{userId}', fn($data) => (new UsersController())->getUser($data['userId'] ?? 0));
+        Router::add('/updateUser/{userId}/update', fn($data) => (new UsersController())->updateUser($data['userId']), 'POST');
+        Router::add('/deleteUser/{userId}', fn($data) => (new UsersController())->deleteUser($data['userId'] ?? 0));
+
+        // Court Routes
+        Router::add('/courts', fn() => (new BookingController())->getCourts());
+        Router::add('/addCourt', fn() => Router::render('AddCourt'));
+        Router::add('/addCourt/add', fn() => (new BookingController())->addCourt(), 'POST');
+        Router::add('/viewCourt/{courtId}', fn($data) => (new BookingController())->viewCourt($data['courtId'] ?? 0));
+        Router::add('/updateCourt/{courtId}', fn($data) => (new BookingController())->getCourt($data['courtId'] ?? 0));
+        Router::add('/updateCourt/{courtId}/update', fn($data) => (new BookingController())->updateCourt($data['courtId']), 'POST');
+        Router::add('/deleteCourt/{courtId}', fn($data) => (new BookingController())->deleteCourt($data['courtId'] ?? 0));
+
+        // Member Routes
+        Router::add('/members', fn() => (new BookingController())->getMembers());
+        Router::add('/viewMember/{memberId}', fn($data) => (new BookingController())->viewMember($data['memberId'] ?? 0));
+
+        // Schedule Routes
+        Router::add('/schedules', fn() => (new BookingController())->getSchedules());
+        Router::add('/viewSchedule/{scheduleId}', fn($data) => (new BookingController())->viewSchedule($data['scheduleId'] ?? 0));
 
         Router::run();
     }

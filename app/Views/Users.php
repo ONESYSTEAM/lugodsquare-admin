@@ -37,9 +37,9 @@ $this->insert('Errors/Toasts');
                                     </td>
                                     <td><?= $user['first_name'] . ' ' . $user['last_name'] ?></td>
                                     <td>
-                                        <button class="btn btn-gradient-primary btn-sm"><i class="fa fa-eye"></i> View</button>
-                                        <button class="btn btn-gradient-info btn-sm"><i class="fa fa-edit"></i> Update</button>
-                                        <button class="btn btn-gradient-danger btn-sm"><i class="fa fa-trash-o"></i> Delete</button>
+                                        <a href="/viewUser/<?=$user['id']?>" class="btn btn-gradient-primary btn-sm"><i class="fa fa-eye"></i> View</a>
+                                        <a href="/updateUser/<?=$user['id']?>" class="btn btn-gradient-info btn-sm"><i class="fa fa-edit"></i> Update</a>
+                                        <a href="/deleteUser/<?= $user['id']?>" class="btn btn-gradient-danger btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
