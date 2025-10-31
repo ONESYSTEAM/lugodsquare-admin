@@ -6,7 +6,7 @@ $this->insert('Errors/Toasts');
 
 <div class="page-header">
     <h3 class="page-title">Courts</h3>
-    <a href="/addCourt" class="btn btn-gradient-warning">Add Court</a>
+    <a href="/addCourt" class="btn btn-primary">Add Court</a>
 </div>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -32,9 +32,9 @@ $this->insert('Errors/Toasts');
                                         <td><?= $court['capacity'] ?></td>
                                         <td>₱<?= $court['amount'] ?>.00</td>
                                         <td>
-                                            <a href="/viewCourt/<?= $court['id'] ?>" class="btn btn-gradient-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="updateCourt/<?= $court['id'] ?>" class="btn btn-gradient-info btn-sm"><i class="fa fa-edit"></i> Update</a>
-                                            <a href="/deleteCourt/<?=$court['id']?>" class="btn btn-gradient-danger btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
+                                            <a href="/viewCourt/<?= $court['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
+                                            <a href="updateCourt/<?= $court['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
+                                            <a href="/deleteCourt/<?=$court['id']?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

@@ -156,10 +156,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/users">
-                            <span class="menu-title">Users</span>
+                        <a class="nav-link" data-bs-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users">
+                            <span class="menu-title">Accounts</span>
+                            <i class="menu-arrow"></i>
                             <i class="fa fa-address-book menu-icon fs-6"></i>
                         </a>
+                        <div class="collapse" id="users">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/users">Users</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/members">Members</a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#booking" aria-expanded="false" aria-controls="booking">
@@ -171,9 +182,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/courts">Courts</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/members">Members</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/schedules">Schedules</a>
@@ -209,7 +217,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                 </div>
                 <footer class="footer">
                     <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2025 <a href="#" class="text-decoration-none text-danger" target="_blank">Lugod Square</a>. All rights reserved.</span>
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">© <?= date('Y') ?> <a href="#" class="text-decoration-none text-danger">Lugod Square</a>. All rights reserved.</span>
                         <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Powered by: <a href="https://onesysteam.com/" class="text-decoration-none text-danger" target="_blank">OneSysteam</a></span>
                     </div>
                 </footer>

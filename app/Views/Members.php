@@ -22,19 +22,20 @@ $this->insert('Errors/Toasts');
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <?php if(!empty($members)): ?>
-                        <tbody>
-                            <?php foreach ($members as $member): ?>
-                                <tr>
-                                    <td> <?=$member['membership_id']?></td>
-                                    <td><?= $member['first_name'] . ' ' . $member['last_name'] ?></td>
-                                    <td> <?=$member['email']?></td>
-                                    <td>
-                                        <a href="/viewMember/<?=$member['id']?>" class="btn btn-gradient-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
+                        <?php if (!empty($members)): ?>
+                            <tbody>
+                                <?php foreach ($members as $member): ?>
+                                    <tr>
+                                        <td> <?= $member['membership_id'] ?></td>
+                                        <td><?= $member['first_name'] . ' ' . $member['last_name'] ?></td>
+                                        <td> <?= $member['email'] ?></td>
+                                        <td>
+                                            <a href="/viewMember/<?= $member['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
+                                            <a href="/updateMember/<?= $member['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Update</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
                         <?php else: ?>
                             <tbody>
                                 <tr>

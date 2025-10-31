@@ -24,11 +24,23 @@ $this->insert('Errors/Toasts');
                 <div class="col-md-9 ">
                     <h2 class="mb-4 text-center text-md-start"><?= $member['first_name'] . ' ' . $member['last_name'] ?></h2>
                     <hr>
-                    <p class="card-text"><span class="fw-bold">Membership ID:</span> <?= $member['membership_id'] ?></p>
-                    <p class="card-text"><span class="fw-bold">Birth Date:</span> <?= $member['birth_date'] ?></p>
-                    <p class="card-text"><span class="fw-bold">Address:</span> <?= $member['address'] ?></p>
-                    <p class="card-text"><span class="fw-bold">Contact Number:</span> <?= $member['contact_number'] ?></p>
-                    <p class="card-text"><span class="fw-bold">Email:</span> <?= $member['email'] ?></p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="card-text">
+                                <span class="fw-bold">Membership ID:</span> <?= $member['membership_id'] ?> <br>
+                                <span class="fw-bold">Card ID:</span>  <br>
+                                <span class="fw-bold">Birth Date:</span> <?= $member['birth_date'] ?> <br>
+                                <span class="fw-bold">Address:</span> <?= $member['address'] ?> <br>
+                                <span class="fw-bold">Contact Number:</span> <?= $member['contact_number'] ?> <br>
+                                <span class="fw-bold">Email:</span> <?= $member['email'] ?>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="card-text">
+                                <span class="fw-bold">Wallet:</span> <?= $member['wallet'] ?>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
