@@ -3,6 +3,7 @@
 namespace app;
 
 use app\Controllers\BookingController;
+use app\Controllers\POSController;
 use app\Controllers\UsersController;
 
 class Router
@@ -40,6 +41,20 @@ class Router
         // Schedule Routes
         Router::add('/schedules', fn() => (new BookingController())->getSchedules());
         Router::add('/viewSchedule/{scheduleId}', fn($data) => (new BookingController())->viewSchedule($data['scheduleId'] ?? 0));
+
+        // Product Routes
+        Router::add('/products', fn() => (new POSController())->getProducts());
+        Router::add('/addProduct', fn() => Router::render('AddProduct'));
+        Router::add('/addProduct/add', fn() => (new POSController())->addProduct(), 'POST');
+        Router::add('/updateProduct/{productId}', fn($data) => (new POSController())->getProduct($data['productId'] ?? 0));
+        Router::add('/updateProduct/{productId}/update', fn($data) => (new POSController())->updateProduct($data['productId']), 'POST');
+        Router::add('/deleteProduct/{productId}', fn($data) => (new POSController())->deleteProduct($data['productId'] ?? 0));
+
+        //Sales Routes
+        Router::add('/sales', fn() => (new POSController())->getSales());
+
+        //Inventory Routes
+        Router::add('/inventory', fn() => (new POSController())->getInventory());
 
         Router::run();
     }

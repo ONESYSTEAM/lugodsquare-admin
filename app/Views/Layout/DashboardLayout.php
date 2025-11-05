@@ -198,13 +198,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                         <div class="collapse" id="pos">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Products</a>
+                                    <a class="nav-link" href="/products">Products</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Inventory</a>
+                                    <a class="nav-link" href="/inventory">Inventory</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Sales</a>
+                                    <a class="nav-link" href="/sales">Sales</a>
                                 </li>
                             </ul>
                         </div>
