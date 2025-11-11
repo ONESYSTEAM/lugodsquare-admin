@@ -10,9 +10,38 @@ $this->insert('Errors/Toasts');
     }
 </style>
 
+<?php
+// Separate sales by category
+function separateByCategory($sales, $category)
+{
+    return array_filter($sales, fn($s) => $s['product_category'] === $category);
+}
+
+// Render a sales table
+function renderSalesTable($sales)
+{
+    if (empty($sales)) {
+        echo '<tbody><tr><td colspan="7" class="text-center">No Sales Generated.</td></tr></tbody>';
+        return;
+    }
+    echo '<tbody>';
+    foreach ($sales as $s) {
+        echo '<tr>
+            <td>' . $s['product_number'] . '</td>
+            <td>' . $s['item_name'] . '</td>
+            <td>' . $s['total_qty'] . '</td>
+            <td>₱' . $s['unit_price'] . '</td>
+            <td>₱' . $s['raw_sales'] . '</td>
+            <td>₱' . $s['total_discount'] . '</td>
+            <td>₱' . $s['total_sales'] . '</td>
+        </tr>';
+    }
+    echo '</tbody>';
+}
+?>
+
 <div class="page-header">
     <h3 class="page-title">Sales</h3>
-    <!-- <a href="/addProduct" class="btn btn-primary">Add Product</a> -->
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Sales Report
@@ -25,11 +54,13 @@ $this->insert('Errors/Toasts');
         </ul>
     </div>
 </div>
+
+<!-- DAILY SALES -->
 <div class="row" id="daily-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h5 class="mb-0">Daily Sales Report</h5>
+                <h5 class="mb-0">Daily Sales Report - Foods</h5>
                 <h5 class="mb-0">Date: <span id="todayDate"></span></h5>
             </div>
             <div class="card-body">
@@ -44,51 +75,56 @@ $this->insert('Errors/Toasts');
                                 <th>Raw Sales</th>
                                 <th>Total Discount</th>
                                 <th>Sales</th>
-                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
-                        <?php if (!empty($daily)): ?>
-                            <tbody>
-                                <?php foreach ($daily as $sales): ?>
-                                    <tr>
-                                        <td><?= $sales['product_number'] ?></td>
-                                        <td><?= $sales['item_name'] ?></td>
-                                        <td><?= $sales['total_qty'] ?></td>
-                                        <td>₱<?= $sales['unit_price'] ?></td>
-                                        <td>₱<?= $sales['raw_sales'] ?></td>
-                                        <td>₱<?= $sales['total_discount'] ?></td>
-                                        <td>₱<?= $sales['total_sales'] ?></td>
-                                        <!-- <td>
-                                            <a href="/viewUser/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/updateProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
-                                            <a href="/deleteProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
-                                        </td> -->
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        <?php else: ?>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4" class="text-center">No Sales Generated.</td>
-                                </tr>
-                            </tbody>
-                        <?php endif; ?>
+                        <?php renderSalesTable(separateByCategory($daily, 'Foods')); ?>
                     </table>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <h5>Total Sales:</h5>
-                <h5>₱<?= $dailyTotal ?>.00</h5>
+                <h5>₱<?= $dailyByCategory['Foods'] ?? '0' ?>.00</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="mb-0">Daily Sales Report - Merch</h5>
+                <h5 class="mb-0">Date: <span id="todayDate"></span></h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Number</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Raw Sales</th>
+                                <th>Total Discount</th>
+                                <th>Sales</th>
+                            </tr>
+                        </thead>
+                        <?php renderSalesTable(separateByCategory($daily, 'Merch')); ?>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <h5>Total Sales:</h5>
+                <h5>₱<?= $dailyByCategory['Merch'] ?? '0' ?>.00</h5>
             </div>
         </div>
     </div>
 </div>
 
+<!-- WEEKLY SALES -->
 <div class="row d-none" id="weekly-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h5 class="mb-0">Weekly Sales Report</h5>
+                <h5 class="mb-0">Weekly Sales Report - Foods</h5>
                 <h5 class="mb-0">Date: <?= $weekStart . ' - ' . $today ?></h5>
             </div>
             <div class="card-body">
@@ -103,51 +139,57 @@ $this->insert('Errors/Toasts');
                                 <th>Raw Sales</th>
                                 <th>Total Discount</th>
                                 <th>Sales</th>
-                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
-                        <?php if (!empty($daily)): ?>
-                            <tbody>
-                                <?php foreach ($weekly as $sales): ?>
-                                    <tr>
-                                        <td><?= $sales['product_number'] ?></td>
-                                        <td><?= $sales['item_name'] ?></td>
-                                        <td><?= $sales['total_qty'] ?></td>
-                                        <td>₱<?= $sales['unit_price'] ?></td>
-                                        <td>₱<?= $sales['raw_sales'] ?></td>
-                                        <td>₱<?= $sales['total_discount'] ?></td>
-                                        <td>₱<?= $sales['total_sales'] ?></td>
-                                        <!-- <td>
-                                            <a href="/viewUser/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/updateProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
-                                            <a href="/deleteProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
-                                        </td> -->
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        <?php else: ?>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4" class="text-center">No Sales Generated.</td>
-                                </tr>
-                            </tbody>
-                        <?php endif; ?>
+                        <?php renderSalesTable(separateByCategory($weekly, 'Foods')); ?>
                     </table>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <h5>Total Sales:</h5>
-                <h5>₱<?= $weeklyTotal ?>.00</h5>
+                <h5>₱<?= $weeklyByCategory['Foods'] ?? '0' ?>.00</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="mb-0">Weekly Sales Report - Merch</h5>
+                <h5 class="mb-0">Date: <?= $weekStart . ' - ' . $today ?></h5>
+            </div>
+            <div class="card-body">
+                <h6>Merch</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Number</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Raw Sales</th>
+                                <th>Total Discount</th>
+                                <th>Sales</th>
+                            </tr>
+                        </thead>
+                        <?php renderSalesTable(separateByCategory($weekly, 'Merch')); ?>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <h5>Total Sales:</h5>
+                <h5>₱<?= $weeklyByCategory['Merch'] ?? '0' ?>.00</h5>
             </div>
         </div>
     </div>
 </div>
 
+<!-- MONTHLY SALES -->
 <div class="row d-none" id="monthly-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h5 class="mb-0">Monthly Sales Report</h5>
+                <h5 class="mb-0">Monthly Sales Report - Foods</h5>
                 <h5 class="mb-0">Date: <?= $monthStart . ' - ' . $today ?></h5>
             </div>
             <div class="card-body">
@@ -162,51 +204,57 @@ $this->insert('Errors/Toasts');
                                 <th>Raw Sales</th>
                                 <th>Total Discount</th>
                                 <th>Sales</th>
-                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
-                        <?php if (!empty($monthly)): ?>
-                            <tbody>
-                                <?php foreach ($monthly as $sales): ?>
-                                    <tr>
-                                        <td><?= $sales['product_number'] ?></td>
-                                        <td><?= $sales['item_name'] ?></td>
-                                        <td><?= $sales['total_qty'] ?></td>
-                                        <td>₱<?= $sales['unit_price'] ?></td>
-                                        <td>₱<?= $sales['raw_sales'] ?></td>
-                                        <td>₱<?= $sales['total_discount'] ?></td>
-                                        <td>₱<?= $sales['total_sales'] ?></td>
-                                        <!-- <td>
-                                            <a href="/viewUser/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/updateProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
-                                            <a href="/deleteProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
-                                        </td> -->
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        <?php else: ?>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4" class="text-center">No Sales Generated.</td>
-                                </tr>
-                            </tbody>
-                        <?php endif; ?>
+                        <?php renderSalesTable(separateByCategory($monthly, 'Foods')); ?>
                     </table>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <h5>Total Sales:</h5>
-                <h5>₱<?= $monthlyTotal ?>.00</h5>
+                <h5>₱<?= $monthlyByCategory['Foods'] ?? '0' ?>.00</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="mb-0">Monthly Sales Report - Merch</h5>
+                <h5 class="mb-0">Date: <?= $monthStart . ' - ' . $today ?></h5>
+            </div>
+            <div class="card-body">
+                <h6>Merch</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Number</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Raw Sales</th>
+                                <th>Total Discount</th>
+                                <th>Sales</th>
+                            </tr>
+                        </thead>
+                        <?php renderSalesTable(separateByCategory($monthly, 'Merch')); ?>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <h5>Total Sales:</h5>
+                <h5>₱<?= $monthlyByCategory['Merch'] ?? '0' ?>.00</h5>
             </div>
         </div>
     </div>
 </div>
 
+<!-- YEARLY SALES -->
 <div class="row d-none" id="yearly-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h5 class="mb-0">Yearly Sales Report</h5>
+                <h5 class="mb-0">Yearly Sales Report - Foods</h5>
                 <h5 class="mb-0">Date: <?= $yearStart . ' - ' . $today ?></h5>
             </div>
             <div class="card-body">
@@ -221,47 +269,52 @@ $this->insert('Errors/Toasts');
                                 <th>Raw Sales</th>
                                 <th>Total Discount</th>
                                 <th>Sales</th>
-                                <!-- <th>Action</th> -->
                             </tr>
                         </thead>
-                        <?php if (!empty($yearly)): ?>
-                            <tbody>
-                                <?php foreach ($yearly as $sales): ?>
-                                    <tr>
-                                        <td><?= $sales['product_number'] ?></td>
-                                        <td><?= $sales['item_name'] ?></td>
-                                        <td><?= $sales['total_qty'] ?></td>
-                                        <td>₱<?= $sales['unit_price'] ?></td>
-                                        <td>₱<?= $sales['raw_sales'] ?></td>
-                                        <td>₱<?= $sales['total_discount'] ?></td>
-                                        <td>₱<?= $sales['total_sales'] ?></td>
-                                        <!-- <td>
-                                            <a href="/viewUser/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/updateProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
-                                            <a href="/deleteProduct/<?= $sales['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
-                                        </td> -->
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        <?php else: ?>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4" class="text-center">No Sales Generated.</td>
-                                </tr>
-                            </tbody>
-                        <?php endif; ?>
+                        <?php renderSalesTable(separateByCategory($yearly, 'Foods')); ?>
                     </table>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <h5>Total Sales:</h5>
-                <h5>₱<?= $yearlyTotal ?>.00</h5>
+                <h5>₱<?= $yearlyByCategory['Foods'] ?? '0' ?>.00</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="mb-0">Yearly Sales Report - Merch</h5>
+                <h5 class="mb-0">Date: <?= $yearStart . ' - ' . $today ?></h5>
+            </div>
+            <div class="card-body">
+                <h6>Merch</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Number</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Raw Sales</th>
+                                <th>Total Discount</th>
+                                <th>Sales</th>
+                            </tr>
+                        </thead>
+                        <?php renderSalesTable(separateByCategory($yearly, 'Merch')); ?>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <h5>Total Sales:</h5>
+                <h5>₱<?= $yearlyByCategory['Merch'] ?? '0' ?>.00</h5>
             </div>
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     const today = new Date();
     const options = {
@@ -274,34 +327,21 @@ $this->insert('Errors/Toasts');
     $(document).ready(function() {
         $('#daily').on('click', function() {
             $('#daily-con').removeClass('d-none');
-            $('#weekly-con').addClass('d-none');
-            $('#monthly-con').addClass('d-none');
-            $('#yearly-con').addClass('d-none');
-
+            $('#weekly-con, #monthly-con, #yearly-con').addClass('d-none');
         });
         $('#weekly').on('click', function() {
             $('#weekly-con').removeClass('d-none');
-            $('#daily-con').addClass('d-none');
-            $('#monthly-con').addClass('d-none');
-            $('#yearly-con').addClass('d-none');
-
+            $('#daily-con, #monthly-con, #yearly-con').addClass('d-none');
         });
         $('#monthly').on('click', function() {
             $('#monthly-con').removeClass('d-none');
-            $('#daily-con').addClass('d-none');
-            $('#weekly-con').addClass('d-none');
-            $('#yearly-con').addClass('d-none');
-
+            $('#daily-con, #weekly-con, #yearly-con').addClass('d-none');
         });
         $('#yearly').on('click', function() {
             $('#yearly-con').removeClass('d-none');
-            $('#daily-con').addClass('d-none');
-            $('#weekly-con').addClass('d-none');
-            $('#monthly-con').addClass('d-none');
-
+            $('#daily-con, #weekly-con, #monthly-con').addClass('d-none');
         });
     });
 </script>
-<?php
-$this->stop();
-?>
+
+<?php $this->stop(); ?>

@@ -18,8 +18,19 @@ class POSController
     // Add your custom controllers below to handle business logic.
     public function getProducts()
     {
-        $products = $this->POSModel->fetchAllProducts();
+        $products = $this->POSModel->fetchProductCategory();
         echo $GLOBALS['templates']->render('Products', ['products' => $products]);
+    }
+
+    public function getProductsByCategory($category)
+    {
+        $products = $this->POSModel->fetchProductItems($category);
+        echo $GLOBALS['templates']->render('Product-Items', ['products' => $products, 'category' => $category]);
+    }
+
+    public function addProductCategorySet($category)
+    {
+        echo $GLOBALS['templates']->render('AddProduct', ['category' => $category]);
     }
 
     public function addProduct()
@@ -29,14 +40,15 @@ class POSController
             $productName = $_POST['productName'] ?? '';
             $price = $_POST['price'] ?? '';
             $qty = $_POST['qty'] ?? '';
+            $category = $_POST['productCat'] ?? '';
 
-            $product = $this->POSModel->insertProduct($productNumber, $productName, $price, $qty);
+            $product = $this->POSModel->insertProduct($productNumber, $productName, $price, $qty, $category);
             if ($product) {
                 $_SESSION['success'][] = 'Product Added successfully.';
             } else {
                 $_SESSION['danger'][] = 'Failed to add product. Please try again.';
             }
-            header('Location: /products');
+            header('Location: /products/' . urlencode($category));
             exit();
         }
     }
@@ -54,14 +66,15 @@ class POSController
             $productName = $_POST['productName'] ?? '';
             $price = $_POST['price'] ?? '';
             $qty = $_POST['qty'] ?? '';
+            $category = $_POST['productCat'] ?? '';
 
-            $updated = $this->POSModel->updateProduct($productId, $productNumber, $productName, $price, $qty);
+            $updated = $this->POSModel->updateProduct($productId, $productNumber, $productName, $price, $qty, $category);
             if ($updated) {
                 $_SESSION['success'][] = 'Product updated successfully.';
             } else {
                 $_SESSION['danger'][] = 'Failed to update product. Please try again.';
             }
-            header('Location: /products');
+            header('Location: /products/' . urlencode($category));
             exit();
         }
     }
@@ -81,31 +94,66 @@ class POSController
 
     public function getSales()
     {
-        $today = date('j, Y'); // today
+        $today = date('F j, Y'); // formatted today
 
         $daily = $this->POSModel->getDailySales();
-        $dailyTotalSales = array_sum(array_column($daily, 'total_sales'));
+        $dailyTotals = ['Foods' => 0, 'Merch' => 0];
+        foreach ($daily as $sale) {
+            if (isset($dailyTotals[$sale['product_category']])) {
+                $dailyTotals[$sale['product_category']] += $sale['total_sales'];
+            }
+        }
 
         $weekly = $this->POSModel->getWeeklySales();
-        $weeklyTotalSales = array_sum(array_column($weekly, 'total_sales'));
+        $weeklyTotals = ['Foods' => 0, 'Merch' => 0];
+        foreach ($weekly as $sale) {
+            if (isset($weeklyTotals[$sale['product_category']])) {
+                $weeklyTotals[$sale['product_category']] += $sale['total_sales'];
+            }
+        }
         $weekStart = date('F j', strtotime('monday this week'));
 
         $monthly = $this->POSModel->getMonthlySales();
-        $monthlyTotalSales = array_sum(array_column($monthly, 'total_sales'));
+        $monthlyTotals = ['Foods' => 0, 'Merch' => 0];
+        foreach ($monthly as $sale) {
+            if (isset($monthlyTotals[$sale['product_category']])) {
+                $monthlyTotals[$sale['product_category']] += $sale['total_sales'];
+            }
+        }
         $monthStart = date('F j', strtotime('first day of this month'));
 
         $yearly = $this->POSModel->getYearlySales();
-        $yearlyTotalSales = array_sum(array_column($yearly, 'total_sales'));
+        $yearlyTotals = ['Foods' => 0, 'Merch' => 0];
+        foreach ($yearly as $sale) {
+            if (isset($yearlyTotals[$sale['product_category']])) {
+                $yearlyTotals[$sale['product_category']] += $sale['total_sales'];
+            }
+        }
         $yearStart = date('F j', strtotime('first day of January this year'));
 
         echo $GLOBALS['templates']->render('Sales', [
             'today' => $today,
-            'daily' => $daily, 'dailyTotal' => number_format($dailyTotalSales),
-            'weekly' => $weekly, 'weeklyTotal' => number_format($weeklyTotalSales), 'weekStart' => $weekStart,
-            'monthly' => $monthly, 'monthlyTotal' => number_format($monthlyTotalSales), 'monthStart' => $monthStart,           
-            'yearly' => $yearly, 'yearlyTotal' => number_format($yearlyTotalSales), 'yearStart' => $yearStart      
+            'daily' => $daily,
+            'dailyTotal' => number_format(array_sum($dailyTotals)),
+            'dailyByCategory' => array_map('number_format', $dailyTotals),
+
+            'weekly' => $weekly,
+            'weeklyTotal' => number_format(array_sum($weeklyTotals)),
+            'weeklyByCategory' => array_map('number_format', $weeklyTotals),
+            'weekStart' => $weekStart,
+
+            'monthly' => $monthly,
+            'monthlyTotal' => number_format(array_sum($monthlyTotals)),
+            'monthlyByCategory' => array_map('number_format', $monthlyTotals),
+            'monthStart' => $monthStart,
+
+            'yearly' => $yearly,
+            'yearlyTotal' => number_format(array_sum($yearlyTotals)),
+            'yearlyByCategory' => array_map('number_format', $yearlyTotals),
+            'yearStart' => $yearStart
         ]);
     }
+
 
     public function getInventory()
     {

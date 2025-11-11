@@ -5,10 +5,11 @@ $this->insert('Errors/Toasts');
 ?>
 
 <div class="page-header">
-    <h3 class="page-title">Products</h3>
+    <h3 class="page-title"><?= $category ?></h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/products">Products</a></li>
+            <li class="breadcrumb-item"><a href="/products/<?= $category ?>"><?= $category ?></a></li>
             <li class="breadcrumb-item active" aria-current="page">Add Product</li>
         </ol>
     </nav>
@@ -18,6 +19,10 @@ $this->insert('Errors/Toasts');
         <div class="card">
             <div class="card-body">
                 <form class="forms-sample" action="/addProduct/add" method="POST">
+                    <div class="form-group">
+                        <label for="userType">Product Category</label>
+                        <input type="text" class="form-control" id="productCat" placeholder="Product Category" name="productCat" value="<?= $category ?>" disabled>
+                    </div>
                     <div class="form-group">
                         <label for="productNumber">Product Number</label>
                         <input type="text" class="form-control" id="productNumber" placeholder="Product Number" name="productNumber">

@@ -5,7 +5,8 @@ $this->insert('Errors/Toasts');
 ?>
 
 <div class="page-header">
-    <h3 class="page-title">Products</h3>
+    <h3 class="page-title text-muted"><span><a href="/products" class="text-black text-decoration-none">Products /</a></span> <?= $category?></h3>
+    <a href="/addProduct/<?=$category?>" class="btn btn-primary">Add Product</a>
 </div>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -15,8 +16,10 @@ $this->insert('Errors/Toasts');
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Product Category</th>
-                                <th>No of Items</th>
+                                <th>Product Number</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Qty</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -24,12 +27,14 @@ $this->insert('Errors/Toasts');
                             <tbody>
                                 <?php foreach ($products as $product): ?>
                                     <tr>
-                                        <td><?= $product['product_category'] ?></td>
-                                        <td><?= $product['no_of_items'] ?></td>
+                                        <td><?= $product['product_number'] ?></td>
+                                        <td><?= $product['product_name'] ?></td>
+                                        <td>₱<?= $product['price'] ?>.00</td>
+                                        <td><?= $product['qty'] ?></td>
                                         <td>
-                                            <a href="/products/<?= $product['product_category'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/addProduct/<?= $product['product_category'] ?>" class="btn btn-primary btn-sm"><i class="bi bi-bag-plus-fill"></i> Add Product</a>
-
+                                            <a href="/viewUser/<?= $product['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
+                                            <a href="/updateProduct/<?= $product['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
+                                            <a href="/deleteProduct/<?= $product['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

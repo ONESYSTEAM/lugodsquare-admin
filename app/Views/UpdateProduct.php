@@ -19,6 +19,13 @@ $this->insert('Errors/Toasts');
             <div class="card-body">
                 <form class="forms-sample" action="/updateProduct/<?= $product['id'] ?>/update" method="POST">
                     <div class="form-group">
+                        <label for="productCat">Product Category</label>
+                        <select class="form-select" id="productCat" name="productCat">
+                            <option value="Foods" <?= ($product['product_category'] == "Foods") ? 'selected' : '' ?>>Foods</option>
+                            <option value="Merch" <?= ($product['product_category'] == "Merch") ? 'selected' : '' ?>>Merch</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="firstName">Product Number</label>
                         <input type="text" class="form-control" id="courtType" placeholder="Pruduct Number" name="productNumber" value="<?=$product['product_number']?>">
                     </div>

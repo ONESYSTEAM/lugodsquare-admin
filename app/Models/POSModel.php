@@ -15,20 +15,30 @@ class POSModel
     }
 
     // Add your custom methods below to interact with the database.
-    public function fetchAllProducts()
+    public function fetchProductCategory()
     {
-        $stmt = $this->db->prepare("SELECT * FROM products WHERE is_deleted = 0");
+        $stmt = $this->db->prepare("SELECT product_category, COUNT(*) AS no_of_items FROM products WHERE is_deleted = 0 GROUP BY product_category");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insertProduct($productNumber, $productName, $price, $qty)
+    public function fetchProductItems($category)
     {
-        $stmt = $this->db->prepare("INSERT INTO products (product_number, product_name, price, qty) VALUES (:product_number, :product_name, :price)");
+        $stmt = $this->db->prepare("SELECT * FROM products WHERE is_deleted = 0 AND product_category = :category");
+        $stmt->bindParam(':category', $category, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function insertProduct($productNumber, $productName, $price, $qty, $category)
+    {
+        $stmt = $this->db->prepare("INSERT INTO products (product_number, product_name, price, qty, product_category) VALUES (:product_number, :product_name, :price, :qty, :category)");
         $stmt->bindParam(':product_number', $productNumber, PDO::PARAM_STR);
         $stmt->bindParam(':product_name', $productName, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_STR);
         $stmt->bindParam(':qty', $qty, PDO::PARAM_STR);
+        $stmt->bindParam(':category', $category, PDO::PARAM_STR);
         return $stmt->execute();
     }
 
@@ -40,13 +50,14 @@ class POSModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateProduct($productId, $productNumber, $productName, $price, $qty)
+    public function updateProduct($productId, $productNumber, $productName, $price, $qty, $category)
     {
-        $stmt = $this->db->prepare("UPDATE products SET product_number = :product_number, product_name = :product_name, price = :price, qty = :qty WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE products SET product_number = :product_number, product_name = :product_name, price = :price, qty = :qty, product_category = :product_category WHERE id = :id");
         $stmt->bindParam(':product_number', $productNumber, PDO::PARAM_STR);
         $stmt->bindParam(':product_name', $productName, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_STR);
         $stmt->bindParam(':qty', $qty, PDO::PARAM_STR);
+        $stmt->bindParam(':product_category', $category, PDO::PARAM_STR);
         $stmt->bindParam(':id', $productId, PDO::PARAM_INT);
         return $stmt->execute();
     }
@@ -61,7 +72,7 @@ class POSModel
 
     public function getDailySales()
     {
-        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number,
+        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
             SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
             FROM sales_items si
             JOIN sales s ON si.sale_id = s.id
@@ -73,7 +84,7 @@ class POSModel
 
     public function getWeeklySales()
     {
-        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number,
+        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
             SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
             FROM sales_items si
             JOIN sales s ON si.sale_id = s.id
@@ -86,7 +97,7 @@ class POSModel
 
     public function getMonthlySales()
     {
-        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number,
+        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
             SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
             FROM sales_items si
             JOIN sales s ON si.sale_id = s.id
@@ -99,7 +110,7 @@ class POSModel
 
     public function getYearlySales()
     {
-        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number,
+        $stmt = $this->db->prepare("SELECT si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
             SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
             FROM sales_items si
             JOIN sales s ON si.sale_id = s.id

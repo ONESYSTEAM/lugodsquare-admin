@@ -16,6 +16,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
 
     <link rel="shortcut icon" href="<?= htmlspecialchars($_ENV['APP_ICON'] ?? '') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
+    <!-- Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 
     <link rel="stylesheet" href="<?= assets('vendors/mdi/css/materialdesignicons.min.css') ?>">
     <link rel="stylesheet" href="<?= assets('vendors/ti-icons/css/themify-icons.css') ?>">

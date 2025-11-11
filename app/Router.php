@@ -44,8 +44,10 @@ class Router
 
         // Product Routes
         Router::add('/products', fn() => (new POSController())->getProducts());
-        Router::add('/addProduct', fn() => Router::render('AddProduct'));
+        Router::add('/products/{category}', fn($data) => (new POSController())->getProductsByCategory($data['category']));
+        Router::add('/addProduct/{category}', fn($data) => (new POSController())->addProductCategorySet($data['category']));
         Router::add('/addProduct/add', fn() => (new POSController())->addProduct(), 'POST');
+        Router::add('/addProduct/{category}/add', fn() => (new POSController())->addProduct(), 'POST');
         Router::add('/updateProduct/{productId}', fn($data) => (new POSController())->getProduct($data['productId'] ?? 0));
         Router::add('/updateProduct/{productId}/update', fn($data) => (new POSController())->updateProduct($data['productId']), 'POST');
         Router::add('/deleteProduct/{productId}', fn($data) => (new POSController())->deleteProduct($data['productId'] ?? 0));
