@@ -30,7 +30,7 @@ $this->insert('Errors/Toasts');
                         <label for="userType">Amount</label>
                         <input type="text" class="form-control" id="amount" placeholder="Amount" name="amount" value="<?=$court['amount']?>">
                     </div>
-                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                    <button type="submit" class="btn btn-custom me-2">Submit</button>
                     <a href="/courts" class="btn btn-light">Cancel</a>
                 </form>
             </div>

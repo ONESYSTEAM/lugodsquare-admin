@@ -46,7 +46,7 @@ $this->insert('Errors/Toasts');
                                         <td><?= $schedule['first_name'] . ' ' . $schedule['last_name'] ?></td>
                                         <td><?= !empty($schedule['membership_id']) ? 'Member' : 'Non-member' ?></td>
                                         <td> <?= $schedule['total_amount'] ?></td>
-                                        <td><a href="/viewSchedule/<?= $schedule['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a></td>
+                                        <td><a href="/viewSchedule/<?= $schedule['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> View</a></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

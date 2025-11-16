@@ -6,7 +6,7 @@ $this->insert('Errors/Toasts');
 
 <div class="page-header">
     <h3 class="page-title">Users</h3>
-    <a href="/addUser" class="btn btn-primary">Add User</a>
+    <a href="/addUser" class="btn btn-custom">Add User</a>
 </div>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -37,9 +37,9 @@ $this->insert('Errors/Toasts');
                                     </td>
                                     <td><?= $user['first_name'] . ' ' . $user['last_name'] ?></td>
                                     <td>
-                                        <a href="/viewUser/<?= $user['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                        <a href="/updateUser/<?= $user['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Update</a>
-                                        <a href="/deleteUser/<?= $user['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
+                                        <a href="/viewUser/<?= $user['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> View</a>
+                                        <a href="/updateUser/<?= $user['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-edit"></i> Update</a>
+                                        <a href="/deleteUser/<?= $user['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-trash-o"></i> Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

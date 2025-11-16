@@ -29,8 +29,8 @@ $this->insert('Errors/Toasts');
                                         <td><?= $member['first_name'] . ' ' . $member['last_name'] ?></td>
                                         <td> <?= $member['email'] ?></td>
                                         <td>
-                                            <a href="/viewMember/<?= $member['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/updateMember/<?= $member['id'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Update</a>
+                                            <a href="/viewMember/<?= $member['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> View</a>
+                                            <a href="/updateMember/<?= $member['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> Update</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

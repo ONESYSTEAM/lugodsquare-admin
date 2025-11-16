@@ -25,6 +25,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     <link rel="stylesheet" href="<?= assets('vendors/font-awesome/css/font-awesome.min.css') ?>">
     <link rel="stylesheet" href="<?= assets('vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') ?>">
     <link rel="stylesheet" href="<?= assets('css/style.css') ?>">
+    <link rel="stylesheet" href="<?= assets('css/custom.css') ?>">
 
     <title><?= isset($title) && !empty($title) ? $this->e($title) : htmlspecialchars($_ENV['APP_NAME'] ?? '') ?></title>
 </head>

@@ -1,0 +1,21 @@
+.btn-custom {
+    background-color: #0e2c0d !important;
+    color: #fff;
+}
+
+.btn-custom:hover {
+    background-color: #236321 !important;
+    color: #fff;
+}
+
+.active {
+    color: #236321 !important;
+}
+
+.sidebar .nav .nav-item.active>.nav-link .menu-title {
+    color: #236321 !important;
+}
+
+.sidebar .nav .nav-item.active>.nav-link i {
+    color: #236321 !important;
+}

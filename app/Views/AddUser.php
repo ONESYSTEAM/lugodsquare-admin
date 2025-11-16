@@ -41,8 +41,8 @@ $this->insert('Errors/Toasts');
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                     </div>
-                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                    <button class="btn btn-light">Cancel</button>
+                    <button type="submit" class="btn btn-custom me-2">Submit</button>
+                    <a href="/users" class="btn btn-light">Cancel</a>
                 </form>
             </div>
         </div>
