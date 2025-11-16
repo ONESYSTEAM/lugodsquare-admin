@@ -5,7 +5,7 @@ $this->insert('Errors/Toasts');
 ?>
 
 <div class="page-header">
-    <h3 class="page-title">Procucts</h3>
+    <h3 class="page-title">Products</h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/products">Products</a></li>
@@ -41,7 +41,7 @@ $this->insert('Errors/Toasts');
                         <label for="quantity">Quantity</label>
                         <input type="text" class="form-control" id="quantity" placeholder="Quamtity" name="qty" value="<?= $product['qty'] ?>">
                     </div>
-                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                    <button type="submit" class="btn btn-custom me-2">Submit</button>
                     <a href="/products" class="btn btn-light">Cancel</a>
                 </form>
             </div>

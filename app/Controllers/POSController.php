@@ -58,6 +58,14 @@ class POSController
         echo $GLOBALS['templates']->render('UpdateProduct', ['product' => $product]);
     }
 
+    public function viewProduct($productId)
+    {
+        $product = $this->POSModel->fetchProductById($productId);
+        echo $GLOBALS['templates']->render('ViewProduct', [
+            'product' => $product
+        ]);
+    }
+
     public function updateProduct($productId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

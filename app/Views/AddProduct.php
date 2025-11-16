@@ -39,7 +39,7 @@ $this->insert('Errors/Toasts');
                         <label for="qty">Quantity</label>
                         <input type="text" class="form-control" id="qty" placeholder="Quantity" name="qty">
                     </div>
-                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    <button type="submit" class="btn btn-custom me-2">Submit</button>
                     <a href="/products" class="btn btn-light">Cancel</a>
                 </form>
             </div>

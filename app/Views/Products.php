@@ -27,8 +27,8 @@ $this->insert('Errors/Toasts');
                                         <td><?= $product['product_category'] ?></td>
                                         <td><?= $product['no_of_items'] ?></td>
                                         <td>
-                                            <a href="/products/<?= $product['product_category'] ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
-                                            <a href="/addProduct/<?= $product['product_category'] ?>" class="btn btn-primary btn-sm"><i class="bi bi-bag-plus-fill"></i> Add Product</a>
+                                            <a href="/products/<?= $product['product_category'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> View</a>
+                                            <a href="/addProduct/<?= $product['product_category'] ?>" class="btn btn-custom btn-sm"><i class="bi bi-bag-plus-fill"></i> Add Product</a>
 
                                         </td>
                                     </tr>
