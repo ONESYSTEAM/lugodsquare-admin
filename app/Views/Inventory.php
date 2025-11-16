@@ -16,7 +16,6 @@ $this->insert('Errors/Toasts');
 </div>
 
 <?php
-// Separate inventory by category
 $foods = array_filter($inventory, fn($item) => $item['product_category'] === 'Foods');
 $merch = array_filter($inventory, fn($item) => $item['product_category'] === 'Merch');
 
@@ -41,7 +40,6 @@ function renderTable($products)
 }
 ?>
 
-<!-- Foods Table -->
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
@@ -67,7 +65,6 @@ function renderTable($products)
     </div>
 </div>
 
-<!-- Merch Table -->
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">

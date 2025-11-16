@@ -27,19 +27,19 @@ $this->insert('Errors/Toasts');
                     </div>
                     <div class="form-group">
                         <label for="firstName">Product Number</label>
-                        <input type="text" class="form-control" id="courtType" placeholder="Pruduct Number" name="productNumber" value="<?=$product['product_number']?>">
+                        <input type="text" class="form-control" id="courtType" placeholder="Pruduct Number" name="productNumber" value="<?= $product['product_number'] ?>">
                     </div>
                     <div class="form-group">
                         <label for="lastName">Product Name</label>
-                        <input type="text" class="form-control" id="capacit" placeholder="Product Name" name="productName" value="<?=$product['product_name']?>">
+                        <input type="text" class="form-control" id="capacit" placeholder="Product Name" name="productName" value="<?= $product['product_name'] ?>">
                     </div>
                     <div class="form-group">
                         <label for="userType">Price</label>
-                        <input type="text" class="form-control" id="amount" placeholder="Price" name="price" value="<?=$product['price']?>">
+                        <input type="text" class="form-control" id="amount" placeholder="Price" name="price" value="<?= $product['price'] ?>">
                     </div>
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
-                        <input type="text" class="form-control" id="quantity" placeholder="Quamtity" name="qty" value="<?=$product['qty']?>">
+                        <input type="text" class="form-control" id="quantity" placeholder="Quamtity" name="qty" value="<?= $product['qty'] ?>">
                     </div>
                     <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                     <a href="/products" class="btn btn-light">Cancel</a>

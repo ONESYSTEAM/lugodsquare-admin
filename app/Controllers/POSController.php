@@ -15,7 +15,6 @@ class POSController
         $this->POSModel = new POSModel($db);
     }
 
-    // Add your custom controllers below to handle business logic.
     public function getProducts()
     {
         $products = $this->POSModel->fetchProductCategory();
@@ -94,7 +93,7 @@ class POSController
 
     public function getSales()
     {
-        $today = date('F j, Y'); // formatted today
+        $today = date('F j, Y');
 
         $daily = $this->POSModel->getDailySales();
         $dailyTotals = ['Foods' => 0, 'Merch' => 0];
@@ -153,7 +152,6 @@ class POSController
             'yearStart' => $yearStart
         ]);
     }
-
 
     public function getInventory()
     {

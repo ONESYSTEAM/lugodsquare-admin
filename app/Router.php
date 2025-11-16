@@ -17,6 +17,7 @@ class Router
         Router::add('/login', fn() => (new UsersController())->login($_POST['username'] ?? 0, $_POST['password'] ?? 0), 'POST');
         Router::add('/logout', fn() => (new UsersController())->logout());
 
+        // User Routes
         Router::add('/users', fn() => (new UsersController())->getUsers(), 'POST');
         Router::add('/addUser', fn() => Router::render('AddUser'));
         Router::add('/addUser/add', fn() => (new UsersController())->addUser(), 'POST');
@@ -52,10 +53,10 @@ class Router
         Router::add('/updateProduct/{productId}/update', fn($data) => (new POSController())->updateProduct($data['productId']), 'POST');
         Router::add('/deleteProduct/{productId}', fn($data) => (new POSController())->deleteProduct($data['productId'] ?? 0));
 
-        //Sales Routes
+        // Sales Routes
         Router::add('/sales', fn() => (new POSController())->getSales());
 
-        //Inventory Routes
+        // Inventory Routes
         Router::add('/inventory', fn() => (new POSController())->getInventory());
 
         Router::run();

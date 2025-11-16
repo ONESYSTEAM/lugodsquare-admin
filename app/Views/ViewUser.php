@@ -6,7 +6,6 @@ $this->insert('Errors/Toasts');
 
 <div class="page-header">
     <h3 class="page-title">Users</h3>
-    <!-- <a href="/addUser" class="btn btn-gradient-warning">Add User</a> -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/users">Users</a></li>

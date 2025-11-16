@@ -5,8 +5,8 @@ $this->insert('Errors/Toasts');
 ?>
 
 <div class="page-header">
-    <h3 class="page-title text-muted"><span><a href="/products" class="text-black text-decoration-none">Products /</a></span> <?= $category?></h3>
-    <a href="/addProduct/<?=$category?>" class="btn btn-primary">Add Product</a>
+    <h3 class="page-title text-muted"><span><a href="/products" class="text-black text-decoration-none">Products /</a></span> <?= $category ?></h3>
+    <a href="/addProduct/<?= $category ?>" class="btn btn-primary">Add Product</a>
 </div>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -52,7 +52,6 @@ $this->insert('Errors/Toasts');
         </div>
     </div>
 </div>
-
 
 <?php
 $this->stop();

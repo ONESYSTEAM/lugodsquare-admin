@@ -6,7 +6,6 @@ $this->insert('Errors/Toasts');
 
 <div class="page-header">
     <h3 class="page-title">Schedules</h3>
-    <!-- <a href="/addUser" class="btn btn-gradient-warning">Add User</a> -->
 </div>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
@@ -64,7 +63,6 @@ $this->insert('Errors/Toasts');
         </div>
     </div>
 </div>
-
 
 <?php
 $this->stop();

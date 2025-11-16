@@ -15,8 +15,6 @@ class BookingController
         $this->BookingModel = new BookingModel($db);
     }
 
-    // Add your custom controllers below to handle business logic.
-
     public function getCourts()
     {
         $courts = $this->BookingModel->getCourts();
@@ -90,7 +88,6 @@ class BookingController
         exit;
     }
 
-    // Member controllers
     public function getMembers()
     {
         $members = $this->BookingModel->getMembers();
@@ -103,7 +100,6 @@ class BookingController
         echo $GLOBALS['templates']->render('ViewMember', ['member' => $member]);
     }
 
-    // Schedule controllers
     public function getSchedules()
     {
         $schedules = $this->BookingModel->getSchedules();

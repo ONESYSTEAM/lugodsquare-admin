@@ -14,7 +14,6 @@ class POSModel
         $this->db = $db->getConnection();
     }
 
-    // Add your custom methods below to interact with the database.
     public function fetchProductCategory()
     {
         $stmt = $this->db->prepare("SELECT product_category, COUNT(*) AS no_of_items FROM products WHERE is_deleted = 0 GROUP BY product_category");
@@ -29,7 +28,6 @@ class POSModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 
     public function insertProduct($productNumber, $productName, $price, $qty, $category)
     {

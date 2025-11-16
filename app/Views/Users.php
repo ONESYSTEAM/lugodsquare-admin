@@ -51,7 +51,6 @@ $this->insert('Errors/Toasts');
     </div>
 </div>
 
-
 <?php
 $this->stop();
 ?>

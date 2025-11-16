@@ -11,13 +11,11 @@ $this->insert('Errors/Toasts');
 </style>
 
 <?php
-// Separate sales by category
 function separateByCategory($sales, $category)
 {
     return array_filter($sales, fn($s) => $s['product_category'] === $category);
 }
 
-// Render a sales table
 function renderSalesTable($sales)
 {
     if (empty($sales)) {
@@ -55,7 +53,6 @@ function renderSalesTable($sales)
     </div>
 </div>
 
-<!-- DAILY SALES -->
 <div class="row" id="daily-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
@@ -119,7 +116,6 @@ function renderSalesTable($sales)
     </div>
 </div>
 
-<!-- WEEKLY SALES -->
 <div class="row d-none" id="weekly-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
@@ -184,7 +180,6 @@ function renderSalesTable($sales)
     </div>
 </div>
 
-<!-- MONTHLY SALES -->
 <div class="row d-none" id="monthly-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
@@ -249,7 +244,6 @@ function renderSalesTable($sales)
     </div>
 </div>
 
-<!-- YEARLY SALES -->
 <div class="row d-none" id="yearly-con">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">

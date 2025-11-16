@@ -6,7 +6,6 @@ $this->insert('Errors/Toasts');
 
 <div class="page-header">
     <h3 class="page-title">Members</h3>
-    <!-- <a href="/addUser" class="btn btn-gradient-warning">Add User</a> -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/members">Members</a></li>
@@ -28,7 +27,7 @@ $this->insert('Errors/Toasts');
                         <div class="col-md-6">
                             <p class="card-text">
                                 <span class="fw-bold">Membership ID:</span> <?= $member['membership_id'] ?> <br>
-                                <span class="fw-bold">Card ID:</span>  <br>
+                                <span class="fw-bold">Card ID:</span> <br>
                                 <span class="fw-bold">Birth Date:</span> <?= $member['birth_date'] ?> <br>
                                 <span class="fw-bold">Address:</span> <?= $member['address'] ?> <br>
                                 <span class="fw-bold">Contact Number:</span> <?= $member['contact_number'] ?> <br>

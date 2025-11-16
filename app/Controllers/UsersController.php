@@ -118,7 +118,6 @@ class UsersController
 
     public function getUser($id)
     {
-        // $userId = $id['id'] ?? 0;
         $user = $this->UsersModel->getUserById($id);
 
         if (!$user) {
@@ -135,7 +134,6 @@ class UsersController
     public function updateUser($userId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // $userId = $_POST['userId'] ?? 0;
             $firstName = $_POST['firstName'] ?? ' ';
             $lastName = $_POST['lastName'] ?? ' ';
             $password = trim($_POST['password'] ?? ' ');

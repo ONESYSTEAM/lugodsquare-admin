@@ -14,8 +14,6 @@ class BookingModel
         $this->db = $db->getConnection();
     }
 
-    // Add your custom methods below to interact with the database.
-
     public function getCourts()
     {
         $stmt = $this->db->prepare("SELECT * FROM courts_tbl WHERE is_deleted = 0");
@@ -58,7 +56,6 @@ class BookingModel
         return $stmt->execute();
     }
 
-    // Member model methods
     public function getMembers()
     {
         $stmt = $this->db->prepare("SELECT * FROM members");
@@ -74,7 +71,6 @@ class BookingModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    //Schedule model methods 
     public function getSchedules()
     {
         $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
