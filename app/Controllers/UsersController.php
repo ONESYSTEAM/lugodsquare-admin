@@ -34,7 +34,7 @@ class UsersController
             exit;
         }
 
-        header('Location: /');
+        header('Location: /login');
         exit;
     }
 
