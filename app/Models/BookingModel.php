@@ -75,7 +75,20 @@ class BookingModel
     {
         $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
         FROM booking AS b
-        INNER JOIN courts AS c ON b.court_type = c.id");
+        INNER JOIN courts AS c ON b.court_type = c.id
+        WHERE DATE(b.date) >= CURDATE()
+        ORDER BY b.date DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSchedulesArchived()
+    {
+        $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
+        FROM booking AS b
+        INNER JOIN courts AS c ON b.court_type = c.id
+        WHERE DATE(b.date) < CURDATE() AND b.status = 1
+        ORDER BY b.date DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -89,5 +102,38 @@ class BookingModel
         $stmt->bindParam(':id', $scheduleId);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getArchivedScheduleById($scheduleId)
+    {
+        $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
+            FROM booking AS b
+            INNER JOIN courts AS c ON b.court_type = c.id WHERE b.id = :id"
+        );
+        $stmt->bindParam(':id', $scheduleId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function confirmSchedule($scheduleId, $remainingAmount)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET status = 1, total_amount = :remaining WHERE id = :id");
+        $stmt->bindParam(':remaining', $remainingAmount);
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
+
+    public function cancelSchedule($scheduleId)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET status = 2 WHERE id = :id");
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
+
+    public function undoCancelSchedule($scheduleId)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET status = 0 WHERE id = :id");
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
     }
 }

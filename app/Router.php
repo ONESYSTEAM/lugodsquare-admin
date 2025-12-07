@@ -42,6 +42,11 @@ class Router
         // Schedule Routes
         Router::add('/schedules', fn() => (new BookingController())->getSchedules());
         Router::add('/viewSchedule/{scheduleId}', fn($data) => (new BookingController())->viewSchedule($data['scheduleId'] ?? 0));
+        Router::add('/viewSchedule/confirm/{scheduleId}', fn($data) => (new BookingController())->confirmSchedule($data['scheduleId'] ?? 0));
+        Router::add('/viewSchedule/cancel/{scheduleId}', fn($data) => (new BookingController())->cancelSchedule($data['scheduleId'] ?? 0));
+        Router::add('/viewSchedule/undoCancel/{scheduleId}', fn($data) => (new BookingController())->undoCancelSchedule($data['scheduleId'] ?? 0));
+        Router::add('/archive', fn() => (new BookingController())->getSchedulesArchived());
+        Router::add('/viewArchive/{scheduleId}', fn($data) => (new BookingController())->viewArchive($data['scheduleId'] ?? 0));
 
         // Product Routes
         Router::add('/products', fn() => (new POSController())->getProducts());

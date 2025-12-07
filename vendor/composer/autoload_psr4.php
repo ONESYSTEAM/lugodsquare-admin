@@ -8,5 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'config\\' => array($baseDir . '/config'),
     'app\\' => array($baseDir . '/app'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'League\\Plates\\' => array($vendorDir . '/league/plates/src'),
 );

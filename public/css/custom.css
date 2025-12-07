@@ -3,6 +3,21 @@
     color: #fff;
 }
 
+.bg-custom {
+    background-color: #0e2c0d !important;
+    color: #fff;
+}
+
+.bg-danger{
+    background-color: #dc3545 !important;
+    color: #fff;
+}
+.text-danger{
+    color: #dc3545 !important;
+    color: #fff;
+}
+
+
 .btn-custom:hover {
     background-color: #236321 !important;
     color: #fff;

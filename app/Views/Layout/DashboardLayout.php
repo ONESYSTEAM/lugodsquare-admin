@@ -188,6 +188,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                                 <li class="nav-item">
                                     <a class="nav-link" href="/schedules">Schedules</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/archive">Booking Archive</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -237,6 +240,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     <script src="<?= assets("js/jquery.cookie.js") ?>"></script>
     <script src="<?= assets("js/dashboard.js") ?>"></script>
     <script src="<?= assets("js/Toasts.js") ?>"></script>
+    <script src="<?= assets("js/time-status.js") ?>"></script>
+    <script src="<?= assets("js/custom.js") ?>"></script>
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 
