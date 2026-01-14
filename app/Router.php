@@ -52,7 +52,8 @@ class Router
         Router::add('/products', fn() => (new POSController())->getProducts());
         Router::add('/products/{category}', fn($data) => (new POSController())->getProductsByCategory($data['category']));
         Router::add('/addProduct/{category}', fn($data) => (new POSController())->addProductCategorySet($data['category']));
-        Router::add('/addProduct/add', fn() => (new POSController())->addProduct(), 'POST');
+        Router::add('/addProductGeneral', fn() => Router::render('AddProductGeneral'));
+        Router::add('/addProductGeneral/add', fn() => (new POSController())->addProduct(), 'POST');
         Router::add('/addProduct/{category}/add', fn() => (new POSController())->addProduct(), 'POST');
         Router::add('/viewProduct/{productId}', fn($data) => (new POSController())->viewProduct($data['productId'] ?? 0));
         Router::add('/updateProduct/{productId}', fn($data) => (new POSController())->getProduct($data['productId'] ?? 0));
@@ -64,6 +65,9 @@ class Router
 
         // Inventory Routes
         Router::add('/inventory', fn() => (new POSController())->getInventory());
+
+        // GCash Receipt Route
+        Router::add('/gcashReceipt/{fileName}', fn($data) => (new BookingController())->getGcashReceipt($data['fileName']));
 
         Router::run();
     }

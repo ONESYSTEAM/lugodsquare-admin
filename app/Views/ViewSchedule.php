@@ -34,7 +34,7 @@ $this->insert('Errors/Toasts');
                         <span><strong>Total Amount : </strong>₱<?= $schedule['total_amount'] * 2 ?>.00</span> <br>
                         <span class="text-danger"><strong>Remaining Amount : </strong>₱<?= $schedule['total_amount'] ?></span>
                     <?php else: ?>
-                        <span><strong>Total Amount : </strong>₱<?= $schedule['total_amount']?></span>
+                        <span><strong>Total Amount : </strong>₱<?= $schedule['total_amount'] ?></span>
                     <?php endif; ?>
                 </p>
                 <!-- Button trigger modal -->
@@ -83,8 +83,16 @@ $this->insert('Errors/Toasts');
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Gcash Receipt</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <img src="/uploads/gcash/<?= $schedule['gcash_receipt'] ?>" alt="GCash Receipt" class="img-fluid">
+            <div class="modal-body text-center">
+                <?php if (!empty($schedule['gcash_receipt'])): ?>
+                    <img src="/gcashReceipt/<?= str_replace(['.jpg', '.jpeg', '.png'], '', $schedule['gcash_receipt']) ?>"
+                        alt="GCash Receipt"
+                        class="img-fluid"
+                        style="max-height: 550px; border: 1px solid #ddd; border-radius: 5px;">
+                    <p><?= $schedule['gcash_receipt'] ?></p>
+                <?php else: ?>
+                    <div class="alert alert-warning">No GCash receipt found for this booking.</div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

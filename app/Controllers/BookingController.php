@@ -228,19 +228,19 @@ class BookingController
     {
         $subject = "Court Booking Confirmation - " . $courtType . " Court";
 
-            $formattedDate = date('F j, Y', strtotime($date));
-            $formattedStart = date('g:i A', strtotime($startTime));
-            $formattedEnd = date('g:i A', strtotime($endTime));
-            $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
-            $appName = $_ENV['APP_NAME'] ?? '';
+        $formattedDate = date('F j, Y', strtotime($date));
+        $formattedStart = date('g:i A', strtotime($startTime));
+        $formattedEnd = date('g:i A', strtotime($endTime));
+        $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
+        $appName = $_ENV['APP_NAME'] ?? '';
 
-            $remainingAmountHtml = '';
-            if ($totalAmount != 0.00) {
-                $formattedRemainingAmount = '₱' . number_format($totalAmount / 2, 2);
-                $remainingAmountHtml = "<p style='color:red;'><strong>Remaining Amount:</strong> $formattedRemainingAmount</p>";
-            }
+        $remainingAmountHtml = '';
+        if ($totalAmount != 0.00) {
+            $formattedRemainingAmount = '₱' . number_format($totalAmount / 2, 2);
+            $remainingAmountHtml = "<p style='color:red;'><strong>Remaining Amount:</strong> $formattedRemainingAmount</p>";
+        }
 
-            $body = "
+        $body = "
             <div style='font-family: Arial, sans-serif; background-color: #f6f8fa; padding: 20px;'>
                 <div style='max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
                 <div style='background-color: #28a745;color:white;text-align:center;padding:20px;'>
@@ -298,13 +298,13 @@ class BookingController
     {
         $subject = "Court Booking Cancellation - " . $courtType . " Court";
 
-            $formattedDate = date('F j, Y', strtotime($date));
-            $formattedStart = date('g:i A', strtotime($startTime));
-            $formattedEnd = date('g:i A', strtotime($endTime));
-            $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
-            $appName = $_ENV['APP_NAME'] ?? '';
+        $formattedDate = date('F j, Y', strtotime($date));
+        $formattedStart = date('g:i A', strtotime($startTime));
+        $formattedEnd = date('g:i A', strtotime($endTime));
+        $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
+        $appName = $_ENV['APP_NAME'] ?? '';
 
-            $body = "
+        $body = "
             <div style='font-family: Arial, sans-serif; background-color: #f6f8fa; padding: 20px;'>
             <div style='max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
             <div style='background-color: #dc3545;color:white;text-align:center;padding:20px;'>
@@ -368,13 +368,13 @@ class BookingController
     {
         $subject = "Court Booking Restoration - " . $courtType . " Court";
 
-            $formattedDate = date('F j, Y', strtotime($date));
-            $formattedStart = date('g:i A', strtotime($startTime));
-            $formattedEnd = date('g:i A', strtotime($endTime));
-            $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
-            $appName = $_ENV['APP_NAME'] ?? '';
+        $formattedDate = date('F j, Y', strtotime($date));
+        $formattedStart = date('g:i A', strtotime($startTime));
+        $formattedEnd = date('g:i A', strtotime($endTime));
+        $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
+        $appName = $_ENV['APP_NAME'] ?? '';
 
-            $body = "
+        $body = "
             <div style='font-family: Arial, sans-serif; background-color: #f6f8fa; padding: 20px;'>
             <div style='max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
             <div style='background-color: #17a2b8;color:white;text-align:center;padding:20px;'>
@@ -432,5 +432,22 @@ class BookingController
             error_log("Email error: " . $mail->ErrorInfo);
             return false;
         }
+    }
+
+    public function getGcashReceipt($fileName)
+    {
+        $basePath = 'C:/xampp/htdocs/lugodsquare-booking/public/uploads/gcash/';
+
+        // If you removed the extension in the URL, add it back here
+        // Or better: find the file regardless of extension
+        $files = glob($basePath . $fileName . ".*");
+
+        if (!empty($files)) {
+            $filePath = $files[0];
+            header("Content-Type: " . mime_content_type($filePath));
+            readfile($filePath);
+            exit;
+        }
+        die("File not found at: " . $basePath . $fileName);
     }
 }

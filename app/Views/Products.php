@@ -6,6 +6,7 @@ $this->insert('Errors/Toasts');
 
 <div class="page-header">
     <h3 class="page-title">Products</h3>
+    <a href="/addProductGeneral" class="btn btn-custom">Add Product</a>
 </div>
 <div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
