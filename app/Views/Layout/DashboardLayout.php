@@ -63,8 +63,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                             </div>
                         </a>
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="#"><i class="mdi mdi-cached me-2 text-success"></i>Activity Log</a>
-                            <div class="dropdown-divider"></div>
+                            <!-- <a class="dropdown-item" href="#"><i class="mdi mdi-cached me-2 text-success"></i>Activity Log</a>
+                            <div class="dropdown-divider"></div> -->
                             <a class="dropdown-item" href="/logout"><i class="mdi mdi-logout me-2 text-primary"></i>Logout</a>
                         </div>
                     </li>
@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                             <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                             <i class="mdi mdi-bell-outline"></i>
                             <span class="count-symbol bg-danger"></span>
@@ -119,7 +119,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                             <div class="dropdown-divider"></div>
                             <h6 class="p-3 mb-0 text-center">See all notifications</h6>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                     <span class="mdi mdi-menu"></span>
