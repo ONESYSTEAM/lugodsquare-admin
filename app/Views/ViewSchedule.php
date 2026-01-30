@@ -21,7 +21,30 @@ $this->insert('Errors/Toasts');
             </div>
             <div class="card-body">
                 <h5 class="card-title"><?= $schedule['court_name'] ?></h5>
-                <p class="card-text"><?= $schedule['start_time'] . ' - ' . $schedule['end_time'] ?></p>
+                <p class="card-text">
+                    <?php
+                    $start = $schedule['start_time'];
+                    $end = $schedule['end_time'];
+
+                    // Helper function for your specific rules
+                    $formatTime = function ($timeString) {
+                        $hour = (int)date('H', strtotime($timeString));
+
+                        if ($hour >= 7 && $hour <= 11) {
+                            return date('g:i', strtotime($timeString)) . ' AM';
+                        } elseif ($hour == 12) {
+                            return '12:00 NN';
+                        } elseif ($hour >= 13 && $hour <= 17) {
+                            return date('g:i', strtotime($timeString)) . ' PM';
+                        } else {
+                            // Fallback for any times outside your 7-17 range
+                            return date('g:i A', strtotime($timeString));
+                        }
+                    };
+
+                    echo $formatTime($start) . ' - ' . $formatTime($end);
+                    ?>
+                </p>
                 <ul class="list-group list-group-flush mb-3 border">
                     <li class="list-group-item"><strong>Name : </strong><?= $schedule['first_name'] . ' ' . $schedule['last_name'] ?></li>
                     <li class="list-group-item"><strong>Contact Number : </strong><?= $schedule['contact_number'] ?></li>
@@ -41,6 +64,13 @@ $this->insert('Errors/Toasts');
                 <?php if ($schedule['status'] === 0 && $schedule['total_amount'] !== '0.00'): ?>
                     <button type="button" class="badge badge-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         View Partial Payment Receipt
+                    </button>
+                <?php endif; ?>
+
+                <!-- reschedule booking modal trigger -->
+                <?php if ($schedule['status'] === 1): ?>
+                    <button type="button" id="rescheduleBtn" class="badge badge-primary" data-bs-toggle="modal" data-bs-target="#rescheduleModal">
+                        Reschedule Booking
                     </button>
                 <?php endif; ?>
             </div>
@@ -89,7 +119,6 @@ $this->insert('Errors/Toasts');
                         alt="GCash Receipt"
                         class="img-fluid"
                         style="max-height: 550px; border: 1px solid #ddd; border-radius: 5px;">
-                    <p><?= $schedule['gcash_receipt'] ?></p>
                 <?php else: ?>
                     <div class="alert alert-warning">No GCash receipt found for this booking.</div>
                 <?php endif; ?>
@@ -97,6 +126,79 @@ $this->insert('Errors/Toasts');
         </div>
     </div>
 </div>
+
+<style>
+    .greyed-out {
+        color: #adb5bd !important;
+        font-style: italic;
+        background-color: #f8f9fa;
+    }
+
+    .text-info.fw-bold {
+        color: #0dcaf0 !important;
+    }
+</style>
+
+<div class="modal fade" id="rescheduleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reschedule Booking</h5>
+                <button type="button" class="btn-close" id="customCloseX"></button>
+            </div>
+            <form id="rescheduleForm" action="/viewSchedule/reschedule/<?= $schedule['id'] ?>" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="orig_duration" value="<?= (strtotime($schedule['end_time']) - strtotime($schedule['start_time'])) / 3600 ?>">
+                    <input type="hidden" id="orig_start" value="<?= substr($schedule['start_time'], 0, 5) ?>">
+                    <input type="hidden" id="orig_end" value="<?= substr($schedule['end_time'], 0, 5) ?>">
+                    <input type="hidden" id="reschedule_court" value="<?= $schedule['court_type'] ?>">
+                    <input type="hidden" id="default_date_val" value="<?= $schedule['date'] ?>">
+
+                    <div class="col-12 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="fw-bold">Date</label>
+                            <span class="badge bg-info">Required: <?= (strtotime($schedule['end_time']) - strtotime($schedule['start_time'])) / 3600 ?> Hour(s)</span>
+                        </div>
+                        <div class="form-floating">
+                            <input type="date" class="form-control" id="res_date" name="date" value="<?= $schedule['date'] ?>" required>
+                            <label for="res_date">Date</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="res_startTime" name="startTime" required>
+                                    <option value="" hidden></option>
+                                    <?php for ($i = 7; $i <= 16; $i++): $val = sprintf('%02d:00', $i); ?>
+                                        <option value="<?= $val ?>"><?= date('g:i A', strtotime($val)) ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                                <label>Start Time</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="res_endTime" name="endTime" required>
+                                    <option value="" hidden></option>
+                                    <?php for ($i = 8; $i <= 17; $i++): $val = sprintf('%02d:00', $i); ?>
+                                        <option value="<?= $val ?>"><?= date('g:i A', strtotime($val)) ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                                <label>End Time</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="customCloseBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary reschedule-booking">Confirm Reschedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <?php
 $this->stop();

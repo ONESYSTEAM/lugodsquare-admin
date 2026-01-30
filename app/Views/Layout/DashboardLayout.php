@@ -230,6 +230,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <script src="<?= assets("vendors/js/vendor.bundle.base.js") ?>"></script>
     <script src="<?= assets("vendors/chart.js/chart.umd.js") ?>"></script>
     <script src="<?= assets("vendors/bootstrap-datepicker/bootstrap-datepicker.min.js") ?>"></script>
@@ -242,6 +244,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     <script src="<?= assets("js/Toasts.js") ?>"></script>
     <script src="<?= assets("js/time-status.js") ?>"></script>
     <script src="<?= assets("js/custom.js") ?>"></script>
+    <script src="<?= assets("js/booking.js") ?>"></script>
 
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">

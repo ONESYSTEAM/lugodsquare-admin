@@ -28,7 +28,7 @@ $this->insert('Errors/Toasts');
                     <li class="list-group-item"><strong>Contact Number : </strong><?= $schedule['contact_number'] ?></li>
                     <li class="list-group-item"><strong>Email : </strong><?= $schedule['email'] ?></li>
                 </ul>
-                <p class="card-text"><strong>Total Amount : </strong>₱<?= $schedule['total_amount'] ?>.00</p>
+                <p class="card-text"><strong>Total Amount : </strong>₱<?= $schedule['total_amount'] ?></p>
             </div>
         </div>
     </div>

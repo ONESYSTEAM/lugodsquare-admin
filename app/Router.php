@@ -43,6 +43,7 @@ class Router
         Router::add('/schedules', fn() => (new BookingController())->getSchedules());
         Router::add('/viewSchedule/{scheduleId}', fn($data) => (new BookingController())->viewSchedule($data['scheduleId'] ?? 0));
         Router::add('/viewSchedule/confirm/{scheduleId}', fn($data) => (new BookingController())->confirmSchedule($data['scheduleId'] ?? 0));
+        Router::add('/viewSchedule/reschedule/{scheduleId}', fn($data) => (new BookingController())->rescheduleBooking($data['scheduleId'] ?? 0), 'POST');
         Router::add('/viewSchedule/cancel/{scheduleId}', fn($data) => (new BookingController())->cancelSchedule($data['scheduleId'] ?? 0));
         Router::add('/viewSchedule/undoCancel/{scheduleId}', fn($data) => (new BookingController())->undoCancelSchedule($data['scheduleId'] ?? 0));
         Router::add('/archive', fn() => (new BookingController())->getSchedulesArchived());
@@ -68,6 +69,9 @@ class Router
 
         // GCash Receipt Route
         Router::add('/gcashReceipt/{fileName}', fn($data) => (new BookingController())->getGcashReceipt($data['fileName']));
+
+        // Reschedule Routes
+        Router::add('/get-booked-slots', fn() => (new BookingController())->getBookedSlots(), 'POST');
 
         Router::run();
     }

@@ -95,7 +95,8 @@ class BookingModel
 
     public function getScheduleById($scheduleId)
     {
-        $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
+        $stmt = $this->db->prepare(
+            "SELECT b.*, c.court_type AS court_name
             FROM booking AS b
             INNER JOIN courts AS c ON b.court_type = c.id WHERE b.id = :id"
         );
@@ -106,7 +107,8 @@ class BookingModel
 
     public function getArchivedScheduleById($scheduleId)
     {
-        $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
+        $stmt = $this->db->prepare(
+            "SELECT b.*, c.court_type AS court_name
             FROM booking AS b
             INNER JOIN courts AS c ON b.court_type = c.id WHERE b.id = :id"
         );
@@ -133,6 +135,40 @@ class BookingModel
     public function undoCancelSchedule($scheduleId)
     {
         $stmt = $this->db->prepare("UPDATE booking SET status = 0 WHERE id = :id");
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
+
+    public function bookedSlots($court, $date, $exclude_id = null)
+    {
+        $sql = "SELECT start_time, end_time FROM booking 
+            WHERE court_type = :court 
+            AND date = :date 
+            AND status != 2"; // status 2 = cancelled
+
+        // If an ID is provided, exclude it from the results
+        if ($exclude_id) {
+            $sql .= " AND id != :exclude_id";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':court', $court, PDO::PARAM_STR);
+        $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+
+        if ($exclude_id) {
+            $stmt->bindParam(':exclude_id', $exclude_id, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function rescheduleBooking($scheduleId, $newDate, $newStartTime, $newEndTime)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET date = :newDate, start_time = :newStartTime, end_time = :newEndTime WHERE id = :id");
+        $stmt->bindParam(':newDate', $newDate);
+        $stmt->bindParam(':newStartTime', $newStartTime);
+        $stmt->bindParam(':newEndTime', $newEndTime);
         $stmt->bindParam(':id', $scheduleId);
         return $stmt->execute();
     }
