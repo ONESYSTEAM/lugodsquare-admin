@@ -131,7 +131,6 @@ class BookingModel
         $stmt->bindParam(':id', $scheduleId);
         return $stmt->execute();
     }
-
     public function undoCancelSchedule($scheduleId)
     {
         $stmt = $this->db->prepare("UPDATE booking SET status = 0 WHERE id = :id");
@@ -144,9 +143,7 @@ class BookingModel
         $sql = "SELECT start_time, end_time FROM booking 
             WHERE court_type = :court 
             AND date = :date 
-            AND status != 2"; // status 2 = cancelled
-
-        // If an ID is provided, exclude it from the results
+            AND status != 2";
         if ($exclude_id) {
             $sql .= " AND id != :exclude_id";
         }

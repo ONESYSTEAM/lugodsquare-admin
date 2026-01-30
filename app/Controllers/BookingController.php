@@ -146,7 +146,6 @@ class BookingController
                     $bookingInfo['total_amount']
                 );
 
-                // Notify admin if email fails
                 if (!$emailSent) {
                     $_SESSION['warning'][] = 'Booking confirmed, but email notification failed to send.';
                 }
@@ -227,7 +226,6 @@ class BookingController
     public function getBookedSlots()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // In your Controller
             $court = $_POST['court'];
             $date = $_POST['date'];
             $exclude_id = $_POST['exclude_id'] ?? null;
@@ -288,20 +286,17 @@ class BookingController
         $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
         $appName = $_ENV['APP_NAME'] ?? 'Lugod Square';
 
-        // 1. Logic for Balance Due
         $remainingAmountHtml = '';
-        $qrBalanceText = "Status: Paid"; // Default text for QR
+        $qrBalanceText = "Status: Paid";
 
         if ($totalAmount != 0.00) {
             $balance = $totalAmount / 2;
             $formattedRemainingAmount = '₱' . number_format($balance, 2);
             $remainingAmountHtml = "<p style='color:red;'><strong>Remaining Balance:</strong> $formattedRemainingAmount</p>";
 
-            // Update the text that goes inside the QR code
             $qrBalanceText = "Status: Balance Due\nBalance: $formattedRemainingAmount";
         }
 
-        // 2. Prepare QR data with "Booking Information" header
         $qrRawText = "BOOKING INFORMATION\n" .
             "Name: $name\n" .
             "Court: $courtType\n" .
@@ -516,7 +511,6 @@ class BookingController
 
     private function sendBookingRescheduleEmail($email, $name, $courtType, $date, $startTime, $endTime, $totalAmount)
     {
-        // Updated Subject to reflect Rescheduling
         $subject = "Booking Rescheduled - " . $courtType . " Court";
 
         $formattedDate = date('F j, Y', strtotime($date));
@@ -525,7 +519,6 @@ class BookingController
         $formattedAmount = ($totalAmount == 0.00) ? 'Paid' : '₱' . number_format($totalAmount, 2);
         $appName = $_ENV['APP_NAME'] ?? 'Lugod Square';
 
-        // Logic for Balance Due
         $remainingAmountHtml = '';
         $qrBalanceText = "Status: Paid";
 
@@ -536,7 +529,6 @@ class BookingController
             $qrBalanceText = "Status: Balance Due\nBalance: $formattedRemainingAmount";
         }
 
-        // Prepare Updated QR data
         $qrRawText = "UPDATED BOOKING\n" .
             "Name: $name\n" .
             "Court: $courtType\n" .
@@ -615,8 +607,6 @@ class BookingController
     {
         $basePath = 'C:/xampp/htdocs/lugodsquare-booking/public/uploads/gcash/';
 
-        // If you removed the extension in the URL, add it back here
-        // Or better: find the file regardless of extension
         $files = glob($basePath . $fileName . ".*");
 
         if (!empty($files)) {

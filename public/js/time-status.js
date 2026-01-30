@@ -12,38 +12,34 @@ function updateTimeStatus() {
     const startTime = parseDateTime(el.dataset.start || el.dataset.startTime);
     const endTime = parseDateTime(el.dataset.end || el.dataset.endTime);
 
-    const remaining = (endTime - now) / 1000; // seconds
+    const remaining = (endTime - now) / 1000;
 
     let statusText = "";
-    let bootstrapClass = "bg-secondary"; // default gray
-    let showReschedule = false; // logic for button visibility
+    let bootstrapClass = "bg-secondary";
+    let showReschedule = false;
 
     if (now < startTime) {
       statusText = "Pending";
       bootstrapClass = "bg-secondary";
-      showReschedule = true; // Only show if still pending
+      showReschedule = true;
     } else if (now >= startTime && now < endTime) {
       if (remaining <= 300) {
-        // 5 minutes
         statusText = "Ending Soon";
         bootstrapClass = "bg-warning";
       } else {
         statusText = "Ongoing";
         bootstrapClass = "bg-success";
       }
-      showReschedule = false; // Hide if ongoing
+      showReschedule = false;
     } else {
       statusText = "Ended";
       bootstrapClass = "bg-danger";
-      showReschedule = false; // Hide if ended
+      showReschedule = false;
     }
 
-    // Update badge text and classes
     el.textContent = statusText;
     el.className = "time-status badge " + bootstrapClass;
 
-    // --- Handle Reschedule Button Visibility ---
-    // We find the button with the specific data-bs-target inside the same parent card
     const cardBody = el.closest(".card").querySelector(".card-body");
     const rescheduleBtn = cardBody
       ? cardBody.querySelector('[data-bs-target="#rescheduleModal"]')
@@ -59,6 +55,5 @@ function updateTimeStatus() {
   });
 }
 
-// Initial call + every 10 seconds
 updateTimeStatus();
 setInterval(updateTimeStatus, 10000);

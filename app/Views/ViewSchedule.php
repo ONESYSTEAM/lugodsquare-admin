@@ -26,7 +26,6 @@ $this->insert('Errors/Toasts');
                     $start = $schedule['start_time'];
                     $end = $schedule['end_time'];
 
-                    // Helper function for your specific rules
                     $formatTime = function ($timeString) {
                         $hour = (int)date('H', strtotime($timeString));
 
