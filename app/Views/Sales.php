@@ -25,6 +25,7 @@ function renderSalesTable($sales)
     echo '<tbody>';
     foreach ($sales as $s) {
         echo '<tr>
+            <td>' . $s['cashier_name'] . '</td>
             <td>' . $s['product_number'] . '</td>
             <td>' . $s['item_name'] . '</td>
             <td>' . $s['total_qty'] . '</td>
@@ -65,6 +66,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -95,6 +97,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -128,6 +131,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -159,6 +163,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -192,6 +197,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -223,6 +229,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -256,6 +263,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -287,6 +295,7 @@ function renderSalesTable($sales)
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>Cashier</th>
                                 <th>Product Number</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>

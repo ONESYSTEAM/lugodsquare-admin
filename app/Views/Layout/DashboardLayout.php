@@ -211,6 +211,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                                 <li class="nav-item">
                                     <a class="nav-link" href="/sales">Sales</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/cashier-sales">Cashier Sales</a>
+                                </li>
                             </ul>
                         </div>
                     </li>

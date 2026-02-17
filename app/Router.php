@@ -73,6 +73,10 @@ class Router
         // Reschedule Routes
         Router::add('/get-booked-slots', fn() => (new BookingController())->getBookedSlots(), 'POST');
 
+        // Cashier Sales Route
+        Router::add('/cashier-sales', fn() => Router::render('CashierSales'));
+        Router::add('/live-cashier-sales', fn() => (new POSController())->liveCashierSales());
+
         Router::run();
     }
 

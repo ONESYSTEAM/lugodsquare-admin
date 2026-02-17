@@ -166,4 +166,53 @@ class POSController
         $inventory = $this->POSModel->getProductInventory();
         echo $GLOBALS['templates']->render('Inventory', ['inventory' => $inventory]);
     }
+
+    public function liveCashierSales()
+    {
+        $cashierShifts = $this->POSModel->getCashierSales();
+
+        foreach ($cashierShifts as &$shift) {
+            // Initialize categories
+            $shift['category_totals'] = [
+                'Foods' => 0,
+                'Merch' => 0
+            ];
+
+            if ($shift['status'] === 'open') {
+                // Live shift: calculate totals since start_time
+                $liveSales = $this->POSModel->getLiveShiftTotalByCategory($shift['user_id']);
+            } else {
+                // Closed shift: calculate totals between start_time and end_time
+                $liveSales = $this->POSModel->getShiftTotalByCategory($shift['user_id'], $shift['start_time'], $shift['end_time']);
+            }
+
+            // Populate category totals
+            foreach ($liveSales as $sale) {
+                $shift['category_totals'][$sale['product_category']] = $sale['total_sales'];
+            }
+
+            // Ensure total_sales matches sum of categories
+            $shift['total_sales'] = array_sum($shift['category_totals']);
+        }
+        unset($shift);
+
+        // Calculate dashboard totals
+        $dashboardTotals = [
+            'Foods' => 0,
+            'Merch' => 0,
+            'Total' => 0
+        ];
+
+        foreach ($cashierShifts as $shift) {
+            $dashboardTotals['Foods'] += $shift['category_totals']['Foods'];
+            $dashboardTotals['Merch'] += $shift['category_totals']['Merch'];
+        }
+        $dashboardTotals['Total'] = $dashboardTotals['Foods'] + $dashboardTotals['Merch'];
+
+        // Return JSON
+        echo json_encode([
+            'cashierShifts' => $cashierShifts,
+            'dashboardTotals' => $dashboardTotals
+        ]);
+    }
 }
