@@ -29,14 +29,15 @@ class POSModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insertProduct($productNumber, $productName, $price, $qty, $category)
+    public function insertProduct($productNumber, $productName, $price, $qty, $category, $imageName)
     {
-        $stmt = $this->db->prepare("INSERT INTO products (product_number, product_name, price, qty, product_category) VALUES (:product_number, :product_name, :price, :qty, :category)");
+        $stmt = $this->db->prepare("INSERT INTO products (product_number, product_name, price, qty, product_category, product_image) VALUES (:product_number, :product_name, :price, :qty, :category, :image_name)");
         $stmt->bindParam(':product_number', $productNumber, PDO::PARAM_STR);
         $stmt->bindParam(':product_name', $productName, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_STR);
         $stmt->bindParam(':qty', $qty, PDO::PARAM_STR);
         $stmt->bindParam(':category', $category, PDO::PARAM_STR);
+        $stmt->bindParam(':image_name', $imageName, PDO::PARAM_STR);
         return $stmt->execute();
     }
 
@@ -48,14 +49,15 @@ class POSModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateProduct($productId, $productNumber, $productName, $price, $qty, $category)
+    public function updateProduct($productId, $productNumber, $productName, $price, $qty, $category, $imageToSave)
     {
-        $stmt = $this->db->prepare("UPDATE products SET product_number = :product_number, product_name = :product_name, price = :price, qty = :qty, product_category = :product_category WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE products SET product_number = :product_number, product_name = :product_name, price = :price, qty = :qty, product_category = :product_category, product_image = :image_name WHERE id = :id");
         $stmt->bindParam(':product_number', $productNumber, PDO::PARAM_STR);
         $stmt->bindParam(':product_name', $productName, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_STR);
         $stmt->bindParam(':qty', $qty, PDO::PARAM_STR);
         $stmt->bindParam(':product_category', $category, PDO::PARAM_STR);
+        $stmt->bindParam(':image_name', $imageToSave, PDO::PARAM_STR);
         $stmt->bindParam(':id', $productId, PDO::PARAM_INT);
         return $stmt->execute();
     }

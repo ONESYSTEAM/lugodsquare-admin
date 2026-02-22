@@ -17,7 +17,7 @@ $this->insert('Errors/Toasts');
     <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <form class="forms-sample" action="/addProductGeneral/add" method="POST">
+                <form class="forms-sample" action="/addProductGeneral/add" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
                         <label for="productCat" class="form-label">Product Category</label>
                         <select class="form-select" id="productCat" name="productCat" required>
@@ -41,6 +41,10 @@ $this->insert('Errors/Toasts');
                     <div class="form-group">
                         <label for="qty">Quantity</label>
                         <input type="text" class="form-control" id="qty" placeholder="Quantity" name="qty" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">Product Image</label>
+                        <input type="file" class="form-control" id="productImage" name="productImage">
                     </div>
                     <button type="submit" class="btn btn-custom me-2">Submit</button>
                     <a href="/products" class="btn btn-light">Cancel</a>

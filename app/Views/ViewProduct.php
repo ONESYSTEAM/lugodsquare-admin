@@ -17,8 +17,9 @@ $this->insert('Errors/Toasts');
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="row card-body">
-                <div class="col-md-12">
-                    <p class="card-text">
+                <div class="col-md-12 d-flex flex-column align-items-center justify-content-center ">
+                    <img src="/uploads/products/<?= $product['product_image'] ?>" alt="<?= $product['product_name'] ?>" class="rounded mb-4 me-2" width="300" height="200">
+                    <p class="card-text text-center">
                         <span class="fw-bold">Product Number:</span> <?= $product['product_number'] ?> <br>
                         <span class="fw-bold">Product Name:</span> <?= $product['product_name'] ?> <br>
                         <span class="fw-bold">Price:</span> <?= $product['price'] ?> <br>

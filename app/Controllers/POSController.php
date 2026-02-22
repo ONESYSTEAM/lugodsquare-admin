@@ -41,7 +41,25 @@ class POSController
             $qty = $_POST['qty'] ?? '';
             $category = $_POST['productCat'] ?? '';
 
-            $product = $this->POSModel->insertProduct($productNumber, $productName, $price, $qty, $category);
+            $imageName = null;
+
+            if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] === UPLOAD_ERR_OK) {
+                $fileName = $_FILES['productImage']['name'];
+                $newFileName = time() . '_' . $fileName; // Using timestamp for uniqueness
+
+                // Save to the CURRENT project's upload folder
+                $uploadDir = __DIR__ . '/../../public/uploads/products/';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                if (move_uploaded_file($_FILES['productImage']['tmp_name'], $uploadDir . $newFileName)) {
+                    $imageName = $newFileName;
+                }
+            }
+
+            $product = $this->POSModel->insertProduct($productNumber, $productName, $price, $qty, $category, $imageName);
             if ($product) {
                 $_SESSION['success'][] = 'Product Added successfully.';
             } else {
@@ -75,7 +93,27 @@ class POSController
             $qty = $_POST['qty'] ?? '';
             $category = $_POST['productCat'] ?? '';
 
-            $updated = $this->POSModel->updateProduct($productId, $productNumber, $productName, $price, $qty, $category);
+            $existingImage = $_POST['existingImage'] ?? ''; // From a hidden input
+
+            $imageToSave = $existingImage; // Default to the old image
+
+            // Check if user uploaded a NEW image
+            if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] === UPLOAD_ERR_OK) {
+                $fileName = $_FILES['productImage']['name'];
+                $newFileName = time() . '_' . $fileName;
+                $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/products/';
+
+                if (move_uploaded_file($_FILES['productImage']['tmp_name'], $uploadDir . $newFileName)) {
+                    $imageToSave = $newFileName; // Update to the new filename
+
+                    // Optional: Delete the old file from the folder to save space
+                    if (!empty($existingImage) && file_exists($uploadDir . $existingImage)) {
+                        unlink($uploadDir . $existingImage);
+                    }
+                }
+            }
+
+            $updated = $this->POSModel->updateProduct($productId, $productNumber, $productName, $price, $qty, $category, $imageToSave);
             if ($updated) {
                 $_SESSION['success'][] = 'Product updated successfully.';
             } else {
