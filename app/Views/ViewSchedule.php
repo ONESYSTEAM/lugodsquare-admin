@@ -54,9 +54,20 @@ $this->insert('Errors/Toasts');
                         <span class="badge badge-success">Total Amount Paid</span> <br>
                     <?php elseif ($schedule['total_amount'] !== '0.00' && $schedule['status'] === 1): ?>
                         <span><strong>Total Amount : </strong>₱<?= $schedule['total_amount'] * 2 ?>.00</span> <br>
-                        <span class="text-danger"><strong>Remaining Amount : </strong>₱<?= $schedule['total_amount'] ?></span>
+                        <?php if ($schedule['is_paid'] == 1): ?>
+                            <span class="badge badge-success">Total Amount Paid</span> <br>
+                        <?php else: ?>
+                            <span class="text-danger"><strong>Remaining Amount : </strong>₱<?= $schedule['total_amount'] ?></span>
+                        <?php endif; ?>
                     <?php else: ?>
                         <span><strong>Total Amount : </strong>₱<?= $schedule['total_amount'] ?></span>
+                    <?php endif; ?>
+                    <!-- Mark as Paid btn -->
+                    <br>
+                    <?php if ($schedule['status'] === 1 && $schedule['total_amount'] !== '0.00' && $schedule['is_paid'] == 0): ?>
+                        <a href="/setAmountPaid/<?= $schedule['id'] ?>" class="badge badge-success text-decoration-none ">
+                            Mark as Fully Paid
+                        </a>
                     <?php endif; ?>
                 </p>
                 <!-- Button trigger modal -->
@@ -66,12 +77,7 @@ $this->insert('Errors/Toasts');
                     </button>
                 <?php endif; ?>
 
-                <!-- reschedule booking modal trigger -->
-                <?php if ($schedule['status'] === 1): ?>
-                    <button type="button" id="rescheduleBtn" class="badge badge-primary" data-bs-toggle="modal" data-bs-target="#rescheduleModal">
-                        Reschedule Booking
-                    </button>
-                <?php endif; ?>
+
             </div>
 
             <?php if ($schedule['status'] === 0): ?>
@@ -82,11 +88,22 @@ $this->insert('Errors/Toasts');
             <?php elseif ($schedule['status'] === 1): ?>
                 <div class="card-footer justify-content-between d-flex">
                     <span class="text-dark"><strong>Booking Status</strong></span>
-                    <span class="time-status badge bg-secondary"
-                        data-start="<?= date('Y-m-d H:i:s', strtotime($schedule['date'] . ' ' . $schedule['start_time'])) ?>"
-                        data-end="<?= date('Y-m-d H:i:s', strtotime($schedule['date'] . ' ' . $schedule['end_time'])) ?>">
-                        Pending
-                    </span>
+                    <div>
+
+                        <span class="time-status badge bg-secondary"
+                            data-start="<?= date('Y-m-d H:i:s', strtotime($schedule['date'] . ' ' . $schedule['start_time'])) ?>"
+                            data-end="<?= date('Y-m-d H:i:s', strtotime($schedule['date'] . ' ' . $schedule['end_time'])) ?>">
+                            Pending
+                        </span>
+                        |
+                        <?php if ($schedule['status'] === 1): ?>
+                            <!-- reschedule booking -->
+                            <button type="button" id="rescheduleBtn" class="badge badge-primary" data-bs-toggle="modal" data-bs-target="#rescheduleModal">
+                                Reschedule Booking
+                            </button>
+                        <?php endif; ?>
+                    </div>
+
                 </div>
             <?php elseif ($schedule['status'] === 2): ?>
                 <div class="card-footer justify-content-between d-flex align-items-center">

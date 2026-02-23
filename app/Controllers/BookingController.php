@@ -126,6 +126,19 @@ class BookingController
         echo $GLOBALS['templates']->render('viewBookingArchive', ['schedule' => $schedule]);
     }
 
+    public function setAmountPaid($scheduleId)
+    {
+        $updated = $this->BookingModel->setAmountPaid($scheduleId);
+        if ($updated) {
+            $_SESSION['success'][] = 'Amount marked as paid successfully.';
+        } else {
+            $_SESSION['danger'][] = 'Failed to update payment status. Please try again.';
+        }
+
+        header('Location: /viewSchedule/' . $scheduleId);
+        exit;
+    }
+
     public function confirmSchedule($scheduleId)
     {
         $bookingInfo = $this->BookingModel->getScheduleById($scheduleId);

@@ -169,4 +169,11 @@ class BookingModel
         $stmt->bindParam(':id', $scheduleId);
         return $stmt->execute();
     }
+
+    public function setAmountPaid($scheduleId)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET is_paid = 1 WHERE id = :id");
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
 }

@@ -77,6 +77,9 @@ class Router
         Router::add('/cashier-sales', fn() => Router::render('CashierSales'));
         Router::add('/live-cashier-sales', fn() => (new POSController())->liveCashierSales());
 
+        //Amount Paid Route
+        Router::add('/setAmountPaid/{scheduleId}', fn($data) => (new BookingController())->setAmountPaid($data['scheduleId'] ?? 0));
+
         Router::run();
     }
 
