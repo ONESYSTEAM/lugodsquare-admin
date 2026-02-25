@@ -27,7 +27,7 @@ $this->insert('Errors/Toasts');
                         <div class="col-md-6">
                             <p class="card-text">
                                 <span class="fw-bold">Membership ID:</span> <?= $member['membership_id'] ?> <br>
-                                <span class="fw-bold">Card ID:</span> <br>
+                                <span class="fw-bold">Card ID:</span> <?= $member['card_number'] ?> <br>
                                 <span class="fw-bold">Birth Date:</span> <?= $member['birth_date'] ?> <br>
                                 <span class="fw-bold">Address:</span> <?= $member['address'] ?> <br>
                                 <span class="fw-bold">Contact Number:</span> <?= $member['contact_number'] ?> <br>
@@ -36,7 +36,7 @@ $this->insert('Errors/Toasts');
                         </div>
                         <div class="col-md-6">
                             <p class="card-text">
-                                <span class="fw-bold">Wallet:</span> <?= $member['wallet'] ?>
+                                <span class="fw-bold">Wallet:</span> ₱<?= $member['wallet'] ?>
                             </p>
                         </div>
                     </div>

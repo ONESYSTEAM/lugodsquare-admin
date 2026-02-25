@@ -89,7 +89,6 @@ $this->insert('Errors/Toasts');
                 <div class="card-footer justify-content-between d-flex">
                     <span class="text-dark"><strong>Booking Status</strong></span>
                     <div>
-
                         <span class="time-status badge bg-secondary"
                             data-start="<?= date('Y-m-d H:i:s', strtotime($schedule['date'] . ' ' . $schedule['start_time'])) ?>"
                             data-end="<?= date('Y-m-d H:i:s', strtotime($schedule['date'] . ' ' . $schedule['end_time'])) ?>">
@@ -97,7 +96,7 @@ $this->insert('Errors/Toasts');
                         </span>
                         |
                         <?php if ($schedule['status'] === 1): ?>
-                            <!-- reschedule booking -->
+                            <!-- reschedule booking modal trigger -->
                             <button type="button" id="rescheduleBtn" class="badge badge-primary" data-bs-toggle="modal" data-bs-target="#rescheduleModal">
                                 Reschedule Booking
                             </button>

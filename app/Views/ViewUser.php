@@ -34,7 +34,10 @@ $this->insert('Errors/Toasts');
                         }
                         ?>
                     </p>
-                    <p class="card-text"><span class="fw-bold">Username:</span> <?= $user['username'] ?></p>
+                    <p class="card-text">
+                        <span class="fw-bold">Username:</span> <?= $user['username'] ?> <br>
+                        <span class="fw-bold">ID Number:</span> <?= $user['id_number'] ?>
+                    </p>
                 </div>
             </div>
         </div>

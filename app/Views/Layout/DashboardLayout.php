@@ -65,6 +65,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                             <!-- <a class="dropdown-item" href="#"><i class="mdi mdi-cached me-2 text-success"></i>Activity Log</a>
                             <div class="dropdown-divider"></div> -->
+                            <a class="dropdown-item" href="/attendance"><i class="mdi mdi-clipboard-text me-2 text-primary"></i>Time In/Out</a>
                             <a class="dropdown-item" href="/logout"><i class="mdi mdi-logout me-2 text-primary"></i>Logout</a>
                         </div>
                     </li>
@@ -167,6 +168,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/users">Users</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/attendance-logs">Attendance Logs</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/members">Members</a>

@@ -80,6 +80,16 @@ class Router
         //Amount Paid Route
         Router::add('/setAmountPaid/{scheduleId}', fn($data) => (new BookingController())->setAmountPaid($data['scheduleId'] ?? 0));
 
+        //update member route
+        Router::add('/updateMember/{memberId}', fn($data) => (new UsersController())->updateMemberView($data['memberId'] ?? 0));
+        Router::add('/updateMember/{memberId}/update', fn($data) => (new UsersController())->updateMember($data['memberId']), 'POST');
+
+        //login & logout with ID route
+        Router::add('/attendance', fn() => (new UsersController())->attendance());
+        Router::add('/attendance/timeIn', fn() => (new UsersController())->timeIn($_POST['idNumber'] ?? 0), 'POST');
+        Router::add('/attendance/timeOut', fn() => (new UsersController())->timeOut($_POST['idNumber'] ?? 0), 'POST');
+        Router::add('/attendance-logs', fn() => (new UsersController())->showLogs());
+
         Router::run();
     }
 

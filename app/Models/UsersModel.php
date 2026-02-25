@@ -29,14 +29,15 @@ class UsersModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function addUser($firstName, $lastName, $username, $userType, $password)
+    public function addUser($firstName, $lastName, $username, $userType, $password, $IdNumber)
     {
-        $stmt = $this->db->prepare("INSERT INTO users (user_type, username, password, first_name, last_name) VALUES (:user_type, :username, :password, :first_name, :last_name)");
+        $stmt = $this->db->prepare("INSERT INTO users (user_type, username, password, first_name, last_name, id_number) VALUES (:user_type, :username, :password, :first_name, :last_name, :id_number)");
         $stmt->bindParam(':user_type', $userType, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, PDO::PARAM_STR);
         $stmt->bindParam(':first_name', $firstName, PDO::PARAM_STR);
         $stmt->bindParam(':last_name', $lastName, PDO::PARAM_STR);
+        $stmt->bindParam(':id_number', $IdNumber, PDO::PARAM_STR);
         return $stmt->execute();
     }
 
@@ -48,14 +49,15 @@ class UsersModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateUser($userId, $firstName, $lastName, $username, $userType, $password)
+    public function updateUser($userId, $firstName, $lastName, $username, $userType, $password, $idNumber)
     {
-        $stmt = $this->db->prepare("UPDATE users SET user_type = :user_type, username = :username, password = :password, first_name = :first_name, last_name = :last_name WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE users SET user_type = :user_type, username = :username, password = :password, first_name = :first_name, last_name = :last_name, id_number = :id_number WHERE id = :id");
         $stmt->bindParam(':user_type', $userType, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, PDO::PARAM_STR);
         $stmt->bindParam(':first_name', $firstName, PDO::PARAM_STR);
         $stmt->bindParam(':last_name', $lastName, PDO::PARAM_STR);
+        $stmt->bindParam(':id_number', $idNumber, PDO::PARAM_STR);
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
         return $stmt->execute();
     }
@@ -67,5 +69,91 @@ class UsersModel
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    public function getMemberById($memberId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM members WHERE id = :id LIMIT 1");
+        $stmt->bindParam(':id', $memberId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateMember($memberId, $membershipId, $cardId, $firstName, $lastName, $address, $contactNumber, $email, $wallet)
+    {
+        $stmt = $this->db->prepare("UPDATE members SET membership_id = :membership_id, card_number = :card_id, first_name = :first_name, last_name = :last_name, address = :address, contact_number = :contact_number, email = :email, wallet = :wallet WHERE id = :id");
+        $stmt->bindParam(':membership_id', $membershipId, PDO::PARAM_STR);
+        $stmt->bindParam(':card_id', $cardId, PDO::PARAM_STR);
+        $stmt->bindParam(':first_name', $firstName, PDO::PARAM_STR);
+        $stmt->bindParam(':last_name', $lastName, PDO::PARAM_STR);
+        $stmt->bindParam(':address', $address, PDO::PARAM_STR);
+        $stmt->bindParam(':contact_number', $contactNumber, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':wallet', $wallet, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $memberId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    public function getUserByIdNumber($idNumber)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id_number = :id_number LIMIT 1");
+        $stmt->bindParam(':id_number', $idNumber, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function timeIn($idNumber, $userId)
+    {
+        $stmt = $this->db->prepare("INSERT INTO attendance (user_id, id_number, time_in, work_date) VALUES (:user_id, :id_number, NOW(), CURDATE())");
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':id_number', $idNumber, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+    public function timeOut($idNumber)
+    {
+        $stmt = $this->db->prepare("UPDATE attendance SET time_out = NOW() WHERE id_number = :id_number AND time_out IS NULL");
+        $stmt->bindParam(':id_number', $idNumber, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+    public function getAttendanceByUserId($userId)
+    {
+        // We add work_date = CURDATE() to ensure we only catch shifts started today
+        $stmt = $this->db->prepare("SELECT * FROM attendance 
+            WHERE user_id = :user_id AND work_date = CURDATE() 
+            AND time_out IS NULL 
+            ORDER BY time_in DESC 
+            LIMIT 1
+        ");
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getDailyLogs()
+    {
+        $stmt = $this->db->prepare(
+            "SELECT a.user_id, a.id_number, a.time_in, a.time_out, u.first_name, u.last_name 
+            FROM attendance a
+            JOIN users u ON a.user_id = u.id
+            WHERE a.work_date = CURDATE()
+            ORDER BY a.time_in DESC"
+        );
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getHistoricalLogs()
+    {
+        $stmt = $this->db->prepare(
+            "SELECT a.*, u.first_name, u.last_name 
+        FROM attendance a
+        JOIN users u ON a.user_id = u.id
+        -- Change < to <= just to see if data appears
+        WHERE a.work_date <= CURDATE() 
+        ORDER BY a.work_date DESC, a.time_in DESC"
+        );
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
