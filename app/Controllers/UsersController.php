@@ -249,6 +249,15 @@ class UsersController
 
     public function timeIn($idNumber)
     {
+        $loggedInUserId = $_SESSION['user_id'] ?? 0;
+
+        $isOwner = $this->UsersModel->verifyIdOwnership($idNumber, $loggedInUserId);
+
+        if (!$isOwner) {
+            $_SESSION['danger'][] = 'This ID card does not belong to your account.';
+            header("Location: /attendance");
+            exit;
+        }
         $result = $this->UsersModel->timeIn($idNumber, $_SESSION['user_id'] ?? 0);
         if ($result) {
             $_SESSION['success'][] = 'Time in successful. Have a great day!';
@@ -261,6 +270,15 @@ class UsersController
 
     public function timeOut($idNumber)
     {
+        $loggedInUserId = $_SESSION['user_id'] ?? 0;
+
+        $isOwner = $this->UsersModel->verifyIdOwnership($idNumber, $loggedInUserId);
+
+        if (!$isOwner) {
+            $_SESSION['danger'][] = 'This ID card does not belong to your account.';
+            header("Location: /attendance");
+            exit;
+        }
         $result = $this->UsersModel->timeOut($idNumber);
         if ($result) {
             $_SESSION['success'][] = 'Time out successful.';

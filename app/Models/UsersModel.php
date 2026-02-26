@@ -100,6 +100,17 @@ class UsersModel
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function verifyIdOwnership($idNumber, $userId)
+    {
+        // Use a COUNT or SELECT to see if a record exists with BOTH values
+        $stmt = $this->db->prepare("SELECT id FROM users WHERE id_number = :id_number AND id = :id LIMIT 1");
+        $stmt->bindParam(':id_number', $idNumber);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // If a row is returned, the ownership is valid
+        return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+    }
     public function timeIn($idNumber, $userId)
     {
         $stmt = $this->db->prepare("INSERT INTO attendance (user_id, id_number, time_in, work_date) VALUES (:user_id, :id_number, NOW(), CURDATE())");
