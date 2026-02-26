@@ -72,58 +72,72 @@ class POSModel
 
     public function getDailySales()
     {
-        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name,  SUM(si.qty) AS total_qty,  si.price AS unit_price, 
-         SUM(s.sub_total) AS raw_sales,  p.product_number,  p.product_category, SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
+        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, 
+            ROUND(SUM(si.qty * si.price), 2) AS raw_sales, 
+            p.product_number, p.product_category, 
+            ROUND(SUM(((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount), 2) AS total_discount, 
+            ROUND(SUM((si.qty * si.price) - (((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount)), 2) AS total_sales
         FROM sales_items si
         JOIN sales s ON si.sale_id = s.id
         JOIN products p ON si.item_name = p.product_name
         JOIN users u ON s.user_id = u.id
         WHERE DATE(si.created_at) = CURDATE() 
-        GROUP BY s.user_id, u.first_name, u.last_name , si.item_name, si.price");
+        GROUP BY s.user_id, cashier_name, si.item_name, si.price, p.product_number, p.product_category");
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
     public function getWeeklySales()
     {
-        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
-            SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
-            FROM sales_items si
-            JOIN sales s ON si.sale_id = s.id
-            JOIN products p ON si.item_name = p.product_name 
-            JOIN users u ON s.user_id = u.id
-            WHERE DATE(si.created_at) BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) AND CURDATE() 
-            GROUP BY si.item_name, si.price, u.first_name, u.last_name");
+        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, 
+            ROUND(SUM(si.qty * si.price), 2) AS raw_sales, 
+            p.product_number, p.product_category,
+            ROUND(SUM(((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount), 2) AS total_discount, 
+            ROUND(SUM((si.qty * si.price) - (((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount)), 2) AS total_sales
+        FROM sales_items si
+        JOIN sales s ON si.sale_id = s.id
+        JOIN products p ON si.item_name = p.product_name 
+        JOIN users u ON s.user_id = u.id
+        WHERE DATE(si.created_at) BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) AND CURDATE() 
+        GROUP BY s.user_id, cashier_name, si.item_name, si.price, p.product_number, p.product_category");
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getMonthlySales()
     {
-        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
-            SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
-            FROM sales_items si
-            JOIN sales s ON si.sale_id = s.id
-            JOIN products p ON si.item_name = p.product_name 
-            JOIN users u ON s.user_id = u.id
-            WHERE MONTH(si.created_at) = MONTH(CURDATE()) AND YEAR(si.created_at) = YEAR(CURDATE())
-            GROUP BY si.item_name, si.price, u.first_name, u.last_name");
+        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, 
+            ROUND(SUM(si.qty * si.price), 2) AS raw_sales, 
+            p.product_number, p.product_category,
+            ROUND(SUM(((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount), 2) AS total_discount, 
+            ROUND(SUM((si.qty * si.price) - (((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount)), 2) AS total_sales
+        FROM sales_items si
+        JOIN sales s ON si.sale_id = s.id
+        JOIN products p ON si.item_name = p.product_name 
+        JOIN users u ON s.user_id = u.id
+        WHERE MONTH(si.created_at) = MONTH(CURDATE()) AND YEAR(si.created_at) = YEAR(CURDATE())
+        GROUP BY s.user_id, cashier_name, si.item_name, si.price, p.product_number, p.product_category");
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getYearlySales()
     {
-        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, SUM(s.sub_total) AS raw_sales, p.product_number, p.product_category,
-            SUM(s.discount) AS total_discount, SUM(s.final_total) AS total_sales
-            FROM sales_items si
-            JOIN sales s ON si.sale_id = s.id
-            JOIN products p ON si.item_name = p.product_name 
-            JOIN users u ON s.user_id = u.id
-            WHERE YEAR(si.created_at) = YEAR(CURDATE())
-            GROUP BY si.item_name, si.price, u.first_name, u.last_name");
+        $stmt = $this->db->prepare("SELECT s.user_id, CONCAT(u.first_name, ' ', u.last_name) AS cashier_name, si.item_name, SUM(si.qty) AS total_qty, si.price AS unit_price, 
+            ROUND(SUM(si.qty * si.price), 2) AS raw_sales, 
+            p.product_number, p.product_category,
+            ROUND(SUM(((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount), 2) AS total_discount, 
+            ROUND(SUM((si.qty * si.price) - (((si.qty * si.price) / NULLIF(s.sub_total, 0)) * s.discount)), 2) AS total_sales
+        FROM sales_items si
+        JOIN sales s ON si.sale_id = s.id
+        JOIN products p ON si.item_name = p.product_name 
+        JOIN users u ON s.user_id = u.id
+        WHERE YEAR(si.created_at) = YEAR(CURDATE())
+        GROUP BY s.user_id, cashier_name, si.item_name, si.price, p.product_number, p.product_category");
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
