@@ -90,6 +90,10 @@ class Router
         Router::add('/attendance/timeOut', fn() => (new UsersController())->timeOut($_POST['idNumber'] ?? 0), 'POST');
         Router::add('/attendance-logs', fn() => (new UsersController())->showLogs());
 
+        //calendar route
+        Router::add('/calendar', fn() => Router::render('Calendar'));
+        Router::add('/get-booked-dates', fn() => (new BookingController())->getBookedDates(), 'POST');
+
         Router::run();
     }
 

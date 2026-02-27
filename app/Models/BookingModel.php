@@ -176,4 +176,13 @@ class BookingModel
         $stmt->bindParam(':id', $scheduleId);
         return $stmt->execute();
     }
+
+    public function getAllBookings()
+    {
+        $stmt = $this->db->prepare("SELECT b.id, b.date, b.start_time, b.end_time, b.first_name, b.last_name, c.court_type
+            FROM booking b
+            JOIN courts c ON b.court_type = c.id");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

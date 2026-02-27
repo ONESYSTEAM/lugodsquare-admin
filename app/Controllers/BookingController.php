@@ -630,4 +630,30 @@ class BookingController
         }
         die("File not found at: " . $basePath . $fileName);
     }
+
+    public function getBookedDates()
+    {
+        $bookings = $this->BookingModel->getAllBookings();
+
+        $events = [];
+        foreach ($bookings as $b) {
+            $events[] = [
+                'id'    => $b['id'],
+                'title' => 'Booked', // Or the member's name
+                'start' => $b['date'] . 'T' . $b['start_time'],
+                'end'   => $b['date'] . 'T' . $b['end_time'],
+                'backgroundColor' => '#dc3545',
+                'borderColor' => '#dc3545',
+                'extendedProps' => [
+                    'memberName' => $b['first_name'] . ' ' . $b['last_name'],
+                    'courtName'  => $b['court_type'],
+                    'timeRange'  => date('g:i A', strtotime($b['start_time'])) . ' - ' . date('g:i A', strtotime($b['end_time']))
+                ]
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($events);
+        exit;
+    }
 }

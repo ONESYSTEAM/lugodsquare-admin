@@ -18,6 +18,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
     <link rel="stylesheet" href="<?= assets('vendors/mdi/css/materialdesignicons.min.css') ?>">
     <link rel="stylesheet" href="<?= assets('vendors/ti-icons/css/themify-icons.css') ?>">
     <link rel="stylesheet" href="<?= assets('vendors/css/vendor.bundle.base.css') ?>">
@@ -191,6 +194,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/schedules">Schedules</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/calendar">Booking Calendar</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/archive">Booking Archive</a>
