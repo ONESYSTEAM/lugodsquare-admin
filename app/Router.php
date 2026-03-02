@@ -3,6 +3,7 @@
 namespace app;
 
 use app\Controllers\BookingController;
+use app\Controllers\MembersController;
 use app\Controllers\POSController;
 use app\Controllers\UsersController;
 
@@ -36,8 +37,17 @@ class Router
         Router::add('/deleteCourt/{courtId}', fn($data) => (new BookingController())->deleteCourt($data['courtId'] ?? 0));
 
         // Member Routes
-        Router::add('/members', fn() => (new BookingController())->getMembers());
-        Router::add('/viewMember/{memberId}', fn($data) => (new BookingController())->viewMember($data['memberId'] ?? 0));
+        Router::add('/members', fn() => (new MembersController())->getMembers());
+        Router::add('/viewMember/{memberId}', fn($data) => (new MembersController())->viewMember($data['memberId'] ?? 0));
+        //update member route
+        Router::add('/updateMember/{memberId}', fn($data) => (new MembersController())->updateMemberView($data['memberId'] ?? 0));
+        Router::add('/updateMember/{memberId}/update', fn($data) => (new MembersController())->updateMember($data['memberId']), 'POST');
+        //membership plan route
+        Router::add('/viewMember/{memberId}/update-billing', fn($data) => (new MembersController())->updateBilling($data['memberId'] ?? 0), 'POST');
+        Router::add('/viewMember/{memberId}/activate-membership', fn($data) => (new MembersController())->activateMembership($data['memberId'] ?? 0));
+        Router::add('/viewMember/{memberId}/renew-membership', fn($data) => (new MembersController())->renewMembership($data['memberId'] ?? 0));
+        Router::add('/viewMember/{memberId}/cancel-membership', fn($data) => (new MembersController())->cancelMembership($data['memberId'] ?? 0));
+
 
         // Schedule Routes
         Router::add('/schedules', fn() => (new BookingController())->getSchedules());
@@ -80,10 +90,6 @@ class Router
         //Amount Paid Route
         Router::add('/setAmountPaid/{scheduleId}', fn($data) => (new BookingController())->setAmountPaid($data['scheduleId'] ?? 0));
 
-        //update member route
-        Router::add('/updateMember/{memberId}', fn($data) => (new UsersController())->updateMemberView($data['memberId'] ?? 0));
-        Router::add('/updateMember/{memberId}/update', fn($data) => (new UsersController())->updateMember($data['memberId']), 'POST');
-
         //login & logout with ID route
         Router::add('/attendance', fn() => (new UsersController())->attendance());
         Router::add('/attendance/timeIn', fn() => (new UsersController())->timeIn($_POST['idNumber'] ?? 0), 'POST');
@@ -93,6 +99,10 @@ class Router
         //calendar route
         Router::add('/calendar', fn() => Router::render('Calendar'));
         Router::add('/get-booked-dates', fn() => (new BookingController())->getBookedDates(), 'POST');
+
+        // Check Expirations Route
+        Router::add('/check-expirations', fn() => (new MembersController())->checkExpirations());
+
 
         Router::run();
     }

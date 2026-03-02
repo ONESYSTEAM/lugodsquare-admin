@@ -70,29 +70,6 @@ class UsersModel
         return $stmt->execute();
     }
 
-    public function getMemberById($memberId)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM members WHERE id = :id LIMIT 1");
-        $stmt->bindParam(':id', $memberId, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function updateMember($memberId, $membershipId, $cardId, $firstName, $lastName, $address, $contactNumber, $email, $wallet)
-    {
-        $stmt = $this->db->prepare("UPDATE members SET membership_id = :membership_id, card_number = :card_id, first_name = :first_name, last_name = :last_name, address = :address, contact_number = :contact_number, email = :email, wallet = :wallet WHERE id = :id");
-        $stmt->bindParam(':membership_id', $membershipId, PDO::PARAM_STR);
-        $stmt->bindParam(':card_id', $cardId, PDO::PARAM_STR);
-        $stmt->bindParam(':first_name', $firstName, PDO::PARAM_STR);
-        $stmt->bindParam(':last_name', $lastName, PDO::PARAM_STR);
-        $stmt->bindParam(':address', $address, PDO::PARAM_STR);
-        $stmt->bindParam(':contact_number', $contactNumber, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':wallet', $wallet, PDO::PARAM_STR);
-        $stmt->bindParam(':id', $memberId, PDO::PARAM_INT);
-        return $stmt->execute();
-    }
-
     public function getUserByIdNumber($idNumber)
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE id_number = :id_number LIMIT 1");

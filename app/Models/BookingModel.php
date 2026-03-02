@@ -23,7 +23,8 @@ class BookingModel
 
     public function addCourt($courtType, $capacity, $amount)
     {
-        $stmt = $this->db->prepare("INSERT INTO courts (court_type, capacity, amount) VALUES (:court_type, :capacity, :amount)");
+        $stmt = $this->db->prepare("INSERT INTO courts (court_type, capacity, amount, synced, synced_to_local) 
+                                    VALUES (:court_type, :capacity, :amount, 1, 0)");
         $stmt->bindParam(':court_type', $courtType);
         $stmt->bindParam(':capacity', $capacity);
         $stmt->bindParam(':amount', $amount);
@@ -40,7 +41,12 @@ class BookingModel
 
     public function updateCourt($courtId, $courtType, $capacity, $amount)
     {
-        $stmt = $this->db->prepare("UPDATE courts SET court_type = :court_type, capacity = :capacity, amount = :amount WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE courts 
+                                    SET court_type = :court_type, 
+                                        capacity = :capacity, 
+                                        amount = :amount, 
+                                        synced_to_local = 0 
+                                    WHERE id = :id");
         $stmt->bindParam(':court_type', $courtType);
         $stmt->bindParam(':capacity', $capacity);
         $stmt->bindParam(':amount', $amount);
@@ -50,25 +56,10 @@ class BookingModel
 
     public function deleteCourt($courtId, $userId)
     {
-        $stmt = $this->db->prepare("UPDATE courts SET is_deleted = 1, deleted_by = :user WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE courts SET is_deleted = 1, deleted_by = :user, synced_to_local = 0 WHERE id = :id");
         $stmt->bindParam(':user', $userId);
         $stmt->bindParam(':id', $courtId);
         return $stmt->execute();
-    }
-
-    public function getMembers()
-    {
-        $stmt = $this->db->prepare("SELECT * FROM members");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getMemberById($memberId)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM members WHERE id = :id");
-        $stmt->bindParam(':id', $memberId);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getSchedules()
@@ -77,17 +68,6 @@ class BookingModel
         FROM booking AS b
         INNER JOIN courts AS c ON b.court_type = c.id
         WHERE DATE(b.date) >= CURDATE()
-        ORDER BY b.date DESC");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getSchedulesArchived()
-    {
-        $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
-        FROM booking AS b
-        INNER JOIN courts AS c ON b.court_type = c.id
-        WHERE DATE(b.date) < CURDATE() AND b.status = 1
         ORDER BY b.date DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -105,6 +85,39 @@ class BookingModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function confirmSchedule($scheduleId, $remainingAmount)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET status = 1, total_amount = :remaining, synced_to_local = 0 WHERE id = :id");
+        $stmt->bindParam(':remaining', $remainingAmount);
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
+
+    public function cancelSchedule($scheduleId)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET status = 2, synced_to_local = 0 WHERE id = :id");
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
+
+    public function undoCancelSchedule($scheduleId)
+    {
+        $stmt = $this->db->prepare("UPDATE booking SET status = 0, synced_to_local = 0 WHERE id = :id");
+        $stmt->bindParam(':id', $scheduleId);
+        return $stmt->execute();
+    }
+
+    public function getSchedulesArchived()
+    {
+        $stmt = $this->db->prepare("SELECT b.*, c.court_type AS court_name
+        FROM booking AS b
+        INNER JOIN courts AS c ON b.court_type = c.id
+        WHERE DATE(b.date) < CURDATE() AND b.status = 1
+        ORDER BY b.date DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getArchivedScheduleById($scheduleId)
     {
         $stmt = $this->db->prepare(
@@ -117,33 +130,15 @@ class BookingModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function confirmSchedule($scheduleId, $remainingAmount)
-    {
-        $stmt = $this->db->prepare("UPDATE booking SET status = 1, total_amount = :remaining WHERE id = :id");
-        $stmt->bindParam(':remaining', $remainingAmount);
-        $stmt->bindParam(':id', $scheduleId);
-        return $stmt->execute();
-    }
-
-    public function cancelSchedule($scheduleId)
-    {
-        $stmt = $this->db->prepare("UPDATE booking SET status = 2 WHERE id = :id");
-        $stmt->bindParam(':id', $scheduleId);
-        return $stmt->execute();
-    }
-    public function undoCancelSchedule($scheduleId)
-    {
-        $stmt = $this->db->prepare("UPDATE booking SET status = 0 WHERE id = :id");
-        $stmt->bindParam(':id', $scheduleId);
-        return $stmt->execute();
-    }
 
     public function bookedSlots($court, $date, $exclude_id = null)
     {
         $sql = "SELECT start_time, end_time FROM booking 
             WHERE court_type = :court 
             AND date = :date 
-            AND status != 2";
+            AND status != 2"; // status 2 = cancelled
+
+        // If an ID is provided, exclude it from the results
         if ($exclude_id) {
             $sql .= " AND id != :exclude_id";
         }
@@ -162,7 +157,7 @@ class BookingModel
 
     public function rescheduleBooking($scheduleId, $newDate, $newStartTime, $newEndTime)
     {
-        $stmt = $this->db->prepare("UPDATE booking SET date = :newDate, start_time = :newStartTime, end_time = :newEndTime WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE booking SET date = :newDate, start_time = :newStartTime, end_time = :newEndTime, synced_to_local = 0 WHERE id = :id");
         $stmt->bindParam(':newDate', $newDate);
         $stmt->bindParam(':newStartTime', $newStartTime);
         $stmt->bindParam(':newEndTime', $newEndTime);
@@ -172,7 +167,7 @@ class BookingModel
 
     public function setAmountPaid($scheduleId)
     {
-        $stmt = $this->db->prepare("UPDATE booking SET is_paid = 1 WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE booking SET is_paid = 1, synced_to_local = 0 WHERE id = :id");
         $stmt->bindParam(':id', $scheduleId);
         return $stmt->execute();
     }

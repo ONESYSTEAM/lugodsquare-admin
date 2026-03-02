@@ -90,28 +90,10 @@ class BookingController
         exit;
     }
 
-    public function getMembers()
-    {
-        $members = $this->BookingModel->getMembers();
-        echo $GLOBALS['templates']->render('Members', ['members' => $members]);
-    }
-
-    public function viewMember($memberId)
-    {
-        $member = $this->BookingModel->getMemberById($memberId);
-        echo $GLOBALS['templates']->render('ViewMember', ['member' => $member]);
-    }
-
     public function getSchedules()
     {
         $schedules = $this->BookingModel->getSchedules();
         echo $GLOBALS['templates']->render('Schedules', ['schedules' => $schedules]);
-    }
-
-    public function getSchedulesArchived()
-    {
-        $schedules = $this->BookingModel->getSchedulesArchived();
-        echo $GLOBALS['templates']->render('BookingArchive', ['schedules' => $schedules]);
     }
 
     public function viewSchedule($scheduleId)
@@ -120,10 +102,16 @@ class BookingController
         echo $GLOBALS['templates']->render('ViewSchedule', ['schedule' => $schedule]);
     }
 
+    public function getSchedulesArchived()
+    {
+        $schedules = $this->BookingModel->getSchedulesArchived();
+        echo $GLOBALS['templates']->render('BookingArchive', ['schedules' => $schedules]);
+    }
+
     public function viewArchive($scheduleId)
     {
         $schedule = $this->BookingModel->getScheduleById($scheduleId);
-        echo $GLOBALS['templates']->render('viewBookingArchive', ['schedule' => $schedule]);
+        echo $GLOBALS['templates']->render('ViewBookingArchive', ['schedule' => $schedule]);
     }
 
     public function setAmountPaid($scheduleId)
@@ -139,6 +127,29 @@ class BookingController
         exit;
     }
 
+    public function getGcashReceipt($fileName)
+    {
+        $fileName = basename($fileName);
+
+        $basePath = '/home3/lugodsqu/public_html/public/uploads/gcash/';
+        $filePath = $basePath . $fileName;
+
+        if (file_exists($filePath)) {
+            if (ob_get_level()) ob_end_clean();
+
+            $mimeType = mime_content_type($filePath);
+
+            header("Content-Type: $mimeType");
+            header("Content-Length: " . filesize($filePath));
+            readfile($filePath);
+            exit;
+        } else {
+            http_response_code(404);
+            echo "File not found.";
+            exit;
+        }
+    }
+
     public function confirmSchedule($scheduleId)
     {
         $bookingInfo = $this->BookingModel->getScheduleById($scheduleId);
@@ -147,6 +158,7 @@ class BookingController
             $remainingAmount = number_format($totalAmount / 2, 2);
 
             $confirmed = $this->BookingModel->confirmSchedule($scheduleId, $remainingAmount);
+
 
             if ($confirmed) {
                 $emailSent = $this->sendBookingConfirmationEmail(
@@ -179,6 +191,7 @@ class BookingController
         $bookingInfo = $this->BookingModel->getScheduleById($scheduleId);
         if ($bookingInfo) {
             $canceled = $this->BookingModel->cancelSchedule($scheduleId);
+
             if ($canceled) {
                 $emailSent = $this->sendBookingCancellationEmail(
                     $bookingInfo['email'],
@@ -210,6 +223,7 @@ class BookingController
         $bookingInfo = $this->BookingModel->getScheduleById($scheduleId);
         if ($bookingInfo) {
             $undoCancel = $this->BookingModel->undoCancelSchedule($scheduleId);
+
             if ($undoCancel) {
                 $emailSent = $this->sendBookingUndoCancellationEmail(
                     $bookingInfo['email'],
@@ -239,6 +253,7 @@ class BookingController
     public function getBookedSlots()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // In your Controller
             $court = $_POST['court'];
             $date = $_POST['date'];
             $exclude_id = $_POST['exclude_id'] ?? null;
@@ -289,6 +304,7 @@ class BookingController
         }
     }
 
+
     private function sendBookingConfirmationEmail($email, $name, $courtType, $date, $startTime, $endTime, $totalAmount)
     {
         $subject = "Court Booking Confirmation - " . $courtType . " Court";
@@ -321,63 +337,75 @@ class BookingController
         $qrImageUrl = "https://quickchart.io/qr?text=$qrEncoded&size=150&margin=1&ecLevel=M";
 
         $body = "
-        <div style='font-family: Arial, sans-serif; background-color: #f6f8fa; padding: 20px;'>
-            <div style='max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
-                <div style='background-color: #28a745;color:white;text-align:center;padding:20px;'>
-                    <h2 style='margin:0;'>Court Booking Confirmed</h2>
-                </div>
-                <div style='padding:25px;'>
-                    <p>Hi <strong>$name</strong>,</p>
-                    <p>Great news! Your court booking has been <strong>confirmed</strong>. Your reservation is now active.</p>
-
-                    <div style='background-color:#f9fafc;padding:15px;border-radius:6px;margin:15px 0;border-left: 4px solid #28a745;'>
-                        <p><strong>Court Type:</strong> $courtType </p>
-                        <p><strong>Date:</strong> $formattedDate </p> 
-                        <p><strong>Time:</strong> $formattedStart - $formattedEnd</p>
-                        <p><strong>Total Amount:</strong> $formattedAmount</p>
-                        $remainingAmountHtml
+            <div style='font-family: Arial, sans-serif; background-color: #f6f8fa; padding: 20px;'>
+                <div style='max-width:600px;margin:auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
+                    <div style='background-color: #28a745;color:white;text-align:center;padding:20px;'>
+                        <h2 style='margin:0;'>Court Booking Confirmed</h2>
                     </div>
-
-                    <p><strong>Important:</strong> Please arrive at the venue <strong>at least 15 minutes before</strong> your scheduled time to prepare for your session.</p>
-                    
-                    <div style='text-align:center; margin:30px 0; padding:20px; border: 2px dashed #28a745; border-radius:10px; background-color: #fff;'>
-                        <p style='margin-top:0; font-weight:bold; color:#333;'>Check-in QR Code</p>
-                        <img src='$qrImageUrl' alt='Booking QR Code' style='width:160px; height:160px;' />
-                        <p style='margin-bottom:0; font-size:14px; color:#555;'>Please <strong>show this QR code to the cashier</strong> upon arrival to verify your booking.</p>
+                    <div style='padding:25px;'>
+                        <p>Hi <strong>$name</strong>,</p>
+                        <p>Great news! Your court booking has been <strong>confirmed</strong>. Your reservation is now active.</p>
+    
+                        <div style='background-color:#f9fafc;padding:15px;border-radius:6px;margin:15px 0;border-left: 4px solid #28a745;'>
+                            <p><strong>Court Type:</strong> $courtType </p>
+                            <p><strong>Date:</strong> $formattedDate </p> 
+                            <p><strong>Time:</strong> $formattedStart - $formattedEnd</p>
+                            <p><strong>Total Amount:</strong> $formattedAmount</p>
+                        </div>
+    
+                        <p><strong>Important:</strong> Please arrive at the venue <strong>at least 15 minutes before</strong> your scheduled time to prepare for your session.</p>
+                        <p>If you have any questions, feel free to contact us. Thank you for choosing <strong>$appName</strong>!</p>
+    
+                        <hr style='border:none;border-top:1px solid #ddd;margin:20px 0;'>
+    
+                        <p style='font-size:13px;color:#777;text-align:center;'>This is an automated message, please do not reply.<br>
+                        &copy; " . date('Y') . " Lugod Square. All rights reserved.</p>
                     </div>
-
-                    <p>If you have any questions, feel free to contact us. Thank you for choosing <strong>$appName</strong>!</p>
-
-                    <hr style='border:none;border-top:1px solid #ddd;margin:20px 0;'>
-
-                    <p style='font-size:13px;color:#777;text-align:center;'>This is an automated message, please do not reply.<br>
-                    &copy; " . date('Y') . " Lugod Square. All rights reserved.</p>
                 </div>
             </div>
-        </div>
-    ";
-
+        ";
 
         try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = $_ENV['MAIL_HOST'];
-            $mail->Port = $_ENV['MAIL_PORT'];
-            $mail->SMTPAuth = true;
-            $mail->Username = $_ENV['MAIL_USERNAME'];
-            $mail->Password = $_ENV['MAIL_PASSWORD'];
-            $mail->SMTPSecure = 'tls';
 
-            $mail->setFrom($_ENV['MAIL_FROM'], $_ENV['MAIL_FROM_NAME']);
+            $mail = new PHPMailer(true);
+
+            // TEMP DEBUG (remove after fix)
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = 'error_log';
+
+            $mail->isSMTP();
+            $mail->Host = $_ENV['MAIL_HOST'] ?? 'mail.yourdomain.com';
+            $mail->Port = intval($_ENV['MAIL_PORT'] ?? 465);
+
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'] ?? '';
+            $mail->Password = $_ENV['MAIL_PASSWORD'] ?? '';
+
+            $enc = strtolower($_ENV['MAIL_ENCRYPTION'] ?? 'ssl');
+            if ($enc === 'ssl') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;       // 465
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;    // 587
+            }
+
+            $fromEmail = $_ENV['MAIL_FROM'] ?? ($_ENV['MAIL_USERNAME'] ?? 'no-reply@yourdomain.com');
+            $fromName  = $_ENV['MAIL_FROM_NAME'] ?? 'Lugod Square';
+
+            $mail->setFrom($fromEmail, $fromName);
+            $mail->addReplyTo($fromEmail, $fromName);
             $mail->addAddress($email);
+
             $mail->isHTML(true);
             $mail->Subject = $subject;
-            $mail->Body = $body;
+            $mail->Body    = $body;
+
+            $mail->CharSet = 'UTF-8';
 
             $mail->send();
             return true;
         } catch (Exception $e) {
-            error_log("Email error: " . $mail->ErrorInfo);
+            error_log("PHPMailer exception: " . $e->getMessage());
+            error_log("PHPMailer errorInfo: " . $mail->ErrorInfo);
             return false;
         }
     }
@@ -430,24 +458,44 @@ class BookingController
 
         try {
             $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = $_ENV['MAIL_HOST'];
-            $mail->Port = $_ENV['MAIL_PORT'];
-            $mail->SMTPAuth = true;
-            $mail->Username = $_ENV['MAIL_USERNAME'];
-            $mail->Password = $_ENV['MAIL_PASSWORD'];
-            $mail->SMTPSecure = 'tls';
 
-            $mail->setFrom($_ENV['MAIL_FROM'], $_ENV['MAIL_FROM_NAME']);
+            // TEMP DEBUG (remove after fix)
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = 'error_log';
+
+            $mail->isSMTP();
+            $mail->Host = $_ENV['MAIL_HOST'] ?? 'mail.yourdomain.com';
+            $mail->Port = intval($_ENV['MAIL_PORT'] ?? 465);
+
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'] ?? '';
+            $mail->Password = $_ENV['MAIL_PASSWORD'] ?? '';
+
+            $enc = strtolower($_ENV['MAIL_ENCRYPTION'] ?? 'ssl');
+            if ($enc === 'ssl') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;       // 465
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;    // 587
+            }
+
+            $fromEmail = $_ENV['MAIL_FROM'] ?? ($_ENV['MAIL_USERNAME'] ?? 'no-reply@yourdomain.com');
+            $fromName  = $_ENV['MAIL_FROM_NAME'] ?? 'Lugod Square';
+
+            $mail->setFrom($fromEmail, $fromName);
+            $mail->addReplyTo($fromEmail, $fromName);
             $mail->addAddress($email);
+
             $mail->isHTML(true);
             $mail->Subject = $subject;
-            $mail->Body = $body;
+            $mail->Body    = $body;
+
+            $mail->CharSet = 'UTF-8';
 
             $mail->send();
             return true;
         } catch (Exception $e) {
-            error_log("Email error: " . $mail->ErrorInfo);
+            error_log("PHPMailer exception: " . $e->getMessage());
+            error_log("PHPMailer errorInfo: " . $mail->ErrorInfo);
             return false;
         }
     }
@@ -614,21 +662,6 @@ class BookingController
             error_log("Reschedule Email error: " . $mail->ErrorInfo);
             return false;
         }
-    }
-
-    public function getGcashReceipt($fileName)
-    {
-        $basePath = 'C:/xampp/htdocs/lugodsquare-booking/public/uploads/gcash/';
-
-        $files = glob($basePath . $fileName . ".*");
-
-        if (!empty($files)) {
-            $filePath = $files[0];
-            header("Content-Type: " . mime_content_type($filePath));
-            readfile($filePath);
-            exit;
-        }
-        die("File not found at: " . $basePath . $fileName);
     }
 
     public function getBookedDates()

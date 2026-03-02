@@ -13,6 +13,59 @@ class UsersController
     {
         $db = new DBConnection();
         $this->UsersModel = new UsersModel($db);
+        $this->restrictToBookings();
+    }
+
+    public function restrictToBookings()
+    {
+        $currentUri = strtolower($_SERVER['REQUEST_URI']);
+
+        // 1. PUBLIC ROUTES: Do NOT run restrictions on these paths
+        $publicPaths = ['/login', '/', '/logout']; // Add your login processing route here
+        foreach ($publicPaths as $path) {
+            if ($currentUri == $path || $currentUri == $path . '/') {
+                return; // Exit the function and allow the page to load
+            }
+        }
+
+        // 2. Safety check: If not logged in at all, go to login
+        if (!isset($_SESSION['user_type'])) {
+            header('Location: /login');
+            exit();
+        }
+
+        // 3. Identify the Cashier (Type 2)
+        if ($_SESSION['user_type'] == 2) {
+            $allowedKeywords = [
+                '/courts',
+                '/addcourt',
+                '/viewcourt',
+                '/updatecourt',
+                '/deletecourt',
+                '/schedules',
+                '/viewschedule',
+                '/archive',
+                '/viewarchive',
+                '/calendar',
+                '/get-booked-dates',
+                '/get-booked-slots',
+                '/setamountpaid',
+                '/gcashreceipt'
+            ];
+
+            $isAllowed = false;
+            foreach ($allowedKeywords as $keyword) {
+                if (str_contains($currentUri, $keyword)) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!$isAllowed) {
+                header('Location: /schedules?error=unauthorized');
+                exit();
+            }
+        }
     }
 
     public function index()
@@ -184,47 +237,6 @@ class UsersController
 
         header("Location: /users");
         exit;
-    }
-
-    public function updateMemberView($memberId)
-    {
-        $member = $this->UsersModel->getMemberById($memberId);
-
-        if (!$member) {
-            $_SESSION['danger'][] = 'Member not found.';
-            header("Location: /members");
-            exit;
-        }
-
-        echo $GLOBALS['templates']->render('UpdateMember', [
-            'member' => $member
-        ]);
-    }
-
-    public function updateMember($memberId)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstName = $_POST['firstName'] ?? ' ';
-            $lastName = $_POST['lastName'] ?? ' ';
-            $address = $_POST['address'] ?? ' ';
-            $contactNumber = $_POST['contactNumber'] ?? ' ';
-            $email = $_POST['email'] ?? ' ';
-            $membershipId = $_POST['membershipId'] ?? ' ';
-            $cardId = $_POST['cardId'] ?? ' ';
-            $wallet = $_POST['wallet'] ?? ' ';
-
-            $updateMember = $this->UsersModel->updateMember($memberId, $membershipId, $cardId, $firstName, $lastName, $address, $contactNumber, $email, $wallet);
-
-            if ($updateMember) {
-                $_SESSION['success'][] = 'Member Updated Successfully!';
-                header("Location: /members");
-                exit;
-            } else {
-                $_SESSION['danger'][] = 'Update member failed.';
-                header("Location: /updatemember/$memberId");
-                exit;
-            }
-        }
     }
 
     public function attendance()

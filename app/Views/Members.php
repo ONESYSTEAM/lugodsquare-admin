@@ -18,6 +18,7 @@ $this->insert('Errors/Toasts');
                                 <th>Membership ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -28,6 +29,12 @@ $this->insert('Errors/Toasts');
                                         <td> <?= $member['membership_id'] ?></td>
                                         <td><?= $member['first_name'] . ' ' . $member['last_name'] ?></td>
                                         <td> <?= $member['email'] ?></td>
+                                        <td> <?php if ($member['is_active'] == 1) {
+                                                    echo '<span class="badge rounded-pill bg-success">Active</span>';
+                                                } else {
+                                                    echo '<span class="badge rounded-pill bg-danger">Inactive</span>';
+                                                }
+                                                ?></td>
                                         <td>
                                             <a href="/viewMember/<?= $member['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> View</a>
                                             <a href="/updateMember/<?= $member['id'] ?>" class="btn btn-custom btn-sm"><i class="fa fa-eye"></i> Update</a>

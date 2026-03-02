@@ -1,5 +1,5 @@
 <?php
-if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
+if (!isset($_SESSION['user_id'])) {
     header('Location: /');
     exit;
 }
@@ -161,72 +161,98 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
                             <i class="mdi mdi-home menu-icon"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users">
-                            <span class="menu-title">Accounts</span>
-                            <i class="menu-arrow"></i>
-                            <i class="fa fa-address-book menu-icon fs-6"></i>
-                        </a>
-                        <div class="collapse" id="users">
-                            <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/users">Users</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/attendance-logs">Attendance Logs</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/members">Members</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#booking" aria-expanded="false" aria-controls="booking">
-                            <span class="menu-title">Booking</span>
-                            <i class="menu-arrow"></i>
-                            <i class="fa fa-calendar menu-icon fs-6 pb-1"></i>
-                        </a>
-                        <div class="collapse" id="booking">
-                            <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/courts">Courts</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/schedules">Schedules</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/calendar">Booking Calendar</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/archive">Booking Archive</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#pos" aria-expanded="false" aria-controls="pos">
-                            <span class="menu-title">POS</span>
-                            <i class="menu-arrow"></i>
-                            <i class="fa fa-desktop menu-icon fs-6 pb-1"></i>
-                        </a>
-                        <div class="collapse" id="pos">
-                            <ul class="nav flex-column sub-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/products">Products</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/inventory">Inventory</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/sales">Sales</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/cashier-sales">Cashier Sales</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                    <?php if ($_SESSION['user_type'] == 1) : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users">
+                                <span class="menu-title">Accounts</span>
+                                <i class="menu-arrow"></i>
+                                <i class="fa fa-address-book menu-icon fs-6"></i>
+                            </a>
+                            <div class="collapse" id="users">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/users">Users</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/attendance-logs">Attendance Logs</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/members">Members</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#booking" aria-expanded="false" aria-controls="booking">
+                                <span class="menu-title">Booking</span>
+                                <i class="menu-arrow"></i>
+                                <i class="fa fa-calendar menu-icon fs-6 pb-1"></i>
+                            </a>
+                            <div class="collapse" id="booking">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/courts">Courts</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/schedules">Schedules</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/calendar">Booking Calendar</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/archive">Booking Archive</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#pos" aria-expanded="false" aria-controls="pos">
+                                <span class="menu-title">POS</span>
+                                <i class="menu-arrow"></i>
+                                <i class="fa fa-desktop menu-icon fs-6 pb-1"></i>
+                            </a>
+                            <div class="collapse" id="pos">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/products">Products</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/inventory">Inventory</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/sales">Sales</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/cashier-sales">Cashier Sales</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="collapse" href="#booking" aria-expanded="false" aria-controls="booking">
+                                <span class="menu-title">Booking</span>
+                                <i class="menu-arrow"></i>
+                                <i class="fa fa-calendar menu-icon fs-6 pb-1"></i>
+                            </a>
+                            <div class="collapse" id="booking">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/courts">Courts</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/schedules">Schedules</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/calendar">Booking Calendar</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/archive">Booking Archive</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </nav>
             <div class="main-panel">
@@ -263,6 +289,42 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function() {
+            function performSubscriptionCheck() {
+                $.ajax({
+                    url: '/check-expirations',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('Background Sync:', response.checked_at, 'Updated:', response.updated_rows);
+
+                        // Optional: If rows were updated, show a toast notification
+                        if (response.updated_rows > 0) {
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                icon: 'info',
+                                title: response.updated_rows + ' subscriptions marked as expired.',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Subscription check failed:', xhr.responseText);
+                    }
+                });
+            }
+
+            // 1. Run once when the page opens
+            performSubscriptionCheck();
+
+            // 2. Run every 5 minutes while the tab is open
+            setInterval(performSubscriptionCheck, 300000);
+        });
+    </script>
 
 </body>
 

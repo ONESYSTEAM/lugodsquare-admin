@@ -31,6 +31,9 @@ class POSModel
 
     public function insertProduct($productNumber, $productName, $price, $qty, $category, $imageName)
     {
+        if ($category === 'Rentals') {
+            $qty = null; // Set qty to null for rentals
+        }
         $stmt = $this->db->prepare("INSERT INTO products (product_number, product_name, price, qty, product_category, product_image) VALUES (:product_number, :product_name, :price, :qty, :category, :image_name)");
         $stmt->bindParam(':product_number', $productNumber, PDO::PARAM_STR);
         $stmt->bindParam(':product_name', $productName, PDO::PARAM_STR);

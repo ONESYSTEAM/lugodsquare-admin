@@ -13,6 +13,59 @@ class POSController
     {
         $db = new DBConnection();
         $this->POSModel = new POSModel($db);
+        $this->restrictToBookings();
+    }
+
+    public function restrictToBookings()
+    {
+        $currentUri = strtolower($_SERVER['REQUEST_URI']);
+
+        // 1. PUBLIC ROUTES: Do NOT run restrictions on these paths
+        $publicPaths = ['/login', '/', '/logout']; // Add your login processing route here
+        foreach ($publicPaths as $path) {
+            if ($currentUri == $path || $currentUri == $path . '/') {
+                return; // Exit the function and allow the page to load
+            }
+        }
+
+        // 2. Safety check: If not logged in at all, go to login
+        if (!isset($_SESSION['user_type'])) {
+            header('Location: /login');
+            exit();
+        }
+
+        // 3. Identify the Cashier (Type 2)
+        if ($_SESSION['user_type'] == 2) {
+            $allowedKeywords = [
+                '/courts',
+                '/addcourt',
+                '/viewcourt',
+                '/updatecourt',
+                '/deletecourt',
+                '/schedules',
+                '/viewschedule',
+                '/archive',
+                '/viewarchive',
+                '/calendar',
+                '/get-booked-dates',
+                '/get-booked-slots',
+                '/setamountpaid',
+                '/gcashreceipt'
+            ];
+
+            $isAllowed = false;
+            foreach ($allowedKeywords as $keyword) {
+                if (str_contains($currentUri, $keyword)) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!$isAllowed) {
+                header('Location: /schedules?error=unauthorized');
+                exit();
+            }
+        }
     }
 
     public function getProducts()
@@ -41,7 +94,7 @@ class POSController
             $qty = $_POST['qty'] ?? '';
             $category = $_POST['productCat'] ?? '';
 
-            $imageName = null;
+            $imageName = 'default-product.png';
 
             if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] === UPLOAD_ERR_OK) {
                 $fileName = $_FILES['productImage']['name'];

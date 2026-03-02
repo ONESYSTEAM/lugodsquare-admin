@@ -19,31 +19,38 @@ $this->insert('Errors/Toasts');
         <div class="card">
             <div class="card-body">
                 <form class="forms-sample" action="/addProduct/<?= $category ?>/add" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="userType">Product Category</label>
-                        <input type="text" class="form-control" id="productCat" placeholder="Product Category" name="productCat" value="<?= $category ?>" readonly>
+                    <div class="form-group mb-3">
+                        <label for="productCat">Product Category</label>
+                        <input type="text" class="form-control" id="productCat" name="productCat" value="<?= $category ?>" readonly>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group mb-3 hide-on-rental">
                         <label for="productNumber">Product Number</label>
-                        <input type="text" class="form-control" id="productNumber" placeholder="Product Number" name="productNumber">
+                        <input type="text" class="form-control" id="productNumber" placeholder="Product Number" name="productNumber" required>
                     </div>
-                    <div class="form-group">
-                        <label for="capacity">Product Name</label>
-                        <input type="text" class="form-control" id="capacity" placeholder="Product Name" name="productName">
+
+                    <div class="form-group mb-3">
+                        <label for="productName">Product Name</label>
+                        <input type="text" class="form-control" id="productName" placeholder="Product Name" name="productName" required>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group mb-3">
                         <label for="price">Price</label>
-                        <input type="text" class="form-control" id="price" placeholder="Price" name="price">
+                        <input type="text" class="form-control" id="price" placeholder="Price" name="price" required>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group mb-3 hide-on-rental">
                         <label for="qty">Quantity</label>
-                        <input type="text" class="form-control" id="qty" placeholder="Quantity" name="qty">
+                        <input type="text" class="form-control" id="qty" placeholder="Quantity" name="qty" required>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group mb-3 hide-on-rental">
                         <label for="productImage">Product Image</label>
                         <input type="file" class="form-control" id="productImage" name="productImage">
+                        <input type="hidden" id="defaultImage" name="defaultImage" value="">
                     </div>
-                    <button type="submit" class="btn btn-custom me-2">Submit</button>
+
+                    <button type="submit" class="btn btn-primary me-2">Submit</button>
                     <a href="/products" class="btn btn-light">Cancel</a>
                 </form>
             </div>
@@ -51,6 +58,20 @@ $this->insert('Errors/Toasts');
     </div>
 </div>
 
-<?php
-$this->stop();
-?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Since the category is fixed/readonly on this page, we check it once on load
+        if ($('#productCat').val() === 'Rentals') {
+
+            // 1. Hide the specific fields
+            $('.hide-on-rental').addClass('d-none');
+
+            // 2. Set default values so DB doesn't complain about empty strings/nulls
+            $('#productNumber').val('N/A').removeAttr('required');
+            $('#qty').val('1').removeAttr('required');
+        }
+    });
+</script>
+
+<?php $this->stop(); ?>
